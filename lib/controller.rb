@@ -1,5 +1,8 @@
 #!/usr/bin/ruby
 
+# xraystyle's GApps User Provisioning Tool 
+# https://github.com/xraystyle/google-apps-management-ruby
+
 class Controller
 
    def initialize
@@ -37,7 +40,7 @@ class Controller
          do_action(response)                      
    end
    
-   #get the action returned from 'prompt'. clean up the input and pass to appropriate method.
+   # Get the action returned from 'prompt'. Clean up the input and pass to appropriate method.
    def do_action(action)
       case action
       when "a"
@@ -153,12 +156,14 @@ class Controller
    
    #get user info
    def get_info
+      # template: retrieve_user(username)
       system("clear")
       puts "Getting info..."
       response=gets.chomp
       prompt
    end
    
+   # gtfo
    def bail
    system("clear")
    puts "\n\nThanks for usint xraystyle's GApps User Provisioning Tool!\n\n"
@@ -181,7 +186,6 @@ class Controller
 
 
    end
-   
    
    #### Start Timeout ####
     # start_timeout spins off a new thread that sleeps
