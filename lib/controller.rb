@@ -125,8 +125,8 @@ class Controller
             begin
                @session.delete_user(response)
             rescue GDataError => e
-               puts "User deletion failed, retry."
-               puts "errorcode = " +e.code, "input : "+e.input, "reason : "+e.reason
+               puts "User deletion failed for user \"#{response}\"."
+               puts "Reason : "+e.reason
                prompt
             end
 
@@ -150,8 +150,6 @@ class Controller
          puts "/nBad input, user deletion cancelled. Try again.\n"
          prompt
       end
-         
-    
    end
    
    #get user info
@@ -182,7 +180,6 @@ class Controller
          @session = @auth.gapps_session
          get_info
       end
-
    end
    
    # Outputs a cleanly formatted table with the information about a user in the domain.
@@ -193,45 +190,42 @@ class Controller
       puts "Info for username #{username}:\n\n"
       puts "First and last name:".ljust(40) + "#{retrieved_user.given_name} #{retrieved_user.family_name}".ljust(40)
       puts "User suspended?".ljust(40) + retrieved_user.suspended.ljust(40)
-      puts "User IP whitelisted?".ljust(40) + retrieved_user.ip_whitelisted.ljust(40)
+      # puts "User IP whitelisted?".ljust(40) + retrieved_user.ip_whitelisted.ljust(40)
       puts "Is admin?".ljust(40) + retrieved_user.admin.ljust(40)
       puts "Must change password on next login?".ljust(40) + retrieved_user.change_password_at_next_login.ljust(40)
       puts "Has user logged in yet?".ljust(40) + retrieved_user.agreed_to_terms.ljust(40)
-      puts "User quota in MB:".ljust(40) + retrieved_user.quota_limit.ljust(40)
+      # puts "User quota in MB:".ljust(40) + retrieved_user.quota_limit.ljust(40)
    end
-   
    
    # gtfo
    def bail
-   system("clear")
-   puts "\n\nThanks for usint xraystyle's GApps User Provisioning Tool!\n\n"
-   # output users created in this session.
-   if @created_users.any?
-      puts "Created Users:\n\n"
-      @created_users.each do |user|
-         puts "#{user[:fname].capitalize} #{user[:lname].capitalize}\nUsername: #{user[:uname]}\n\n"
+      system("clear")
+      puts "\n\nThanks for using xraystyle's GApps User Provisioning Tool!\n\n"
+      # output users created in this session.
+      if @created_users.any?
+         puts "Created Users:\n\n"
+         @created_users.each do |user|
+            puts "#{user[:fname].capitalize} #{user[:lname].capitalize}\nUsername: #{user[:uname]}\n\n"
+         end
+         puts "-" * 40 + "\n"
       end
-      puts "-" * 40 + "\n"
-   end
-   # output users deleted in this session.
-   if @deleted_users.any?
-      puts "Deleted Users:\n\n"
-      @deleted_users.each do |user|
-         puts "#{user}\n\n"
+      # output users deleted in this session.
+      if @deleted_users.any?
+         puts "Deleted Users:\n\n"
+         @deleted_users.each do |user|
+            puts "#{user}\n\n"
+         end
+         puts "-" * 40 + "\n"
       end
-      puts "-" * 40 + "\n"
-   end
-   sleep 1
-   exit!
-
-
+      sleep 1
+      exit!
    end
    
    #### Start Timeout ####
-    # start_timeout spins off a new thread that sleeps
-    # for 5 minutes, then sets the user's authenticated session
-    # back to nil. This prevents the user's password from being
-    # stored indefinetly while the app is running.
+   # start_timeout spins off a new thread that sleeps
+   # for 5 minutes, then sets the user's authenticated session
+   # back to nil. This prevents the user's password from being
+   # stored indefinetly while the app is running.
 
    def start_timeout
           timeout=Thread.new {
@@ -240,11 +234,26 @@ class Controller
              }
    end
 
-    # Checks to see if the session auth has timed out. 
-    # If it has, the user will have to authenticate again.
-   
    def timed_out?
-         return false unless @session == nil
+      return false unless @session == nil 
    end
+
    
 end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
