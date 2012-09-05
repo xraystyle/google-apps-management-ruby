@@ -156,11 +156,41 @@ class Controller
    
    #get user info
    def get_info
-      # template: retrieve_user(username)
       system("clear")
-      puts "Getting info..."
-      response=gets.chomp
-      prompt
+      print "Enter the username you want to retrieve info for: "
+      username=gets.chomp.downcase.strip
+      
+      if timed_out? == false
+      # template: retrieve_user(username)
+         begin
+            user=@session.retrieve_user(username)
+         rescue GDataError => e
+            puts "User retrieval failed for username \"#{username}\"."
+            puts "Reason : "+e.reason
+            prompt
+         end
+         if user
+            # Need to clean this up with better text and more of a table-style output. Work in progress.
+            puts "\n\nInfo for username #{username}:\n\n"
+            puts "First and last name: \n#{user.given_name} #{user.family_name}\n\n"
+            puts "User suspended? #{user.suspended}"
+            puts "User IP whitelisted? #{user.ip_whitelisted}"
+            puts "Is admin? #{user.admin}"
+            puts "Must change password on next login? #{user.change_password_at_next_login}"
+            puts "Has user logged in yet? #{user.agreed_to_terms}"
+            puts "User quota(MB): #{user.quota_limit}\n"
+            puts "Press enter to continue..."
+            gets
+            system("clear")
+            prompt
+         end
+      else
+         puts "Session timed out, please re-authenticate."
+         @auth = LogIn.new(@username)
+         @session = @auth.gapps_session
+         get_info
+      end
+
    end
    
    # gtfo
