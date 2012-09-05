@@ -170,16 +170,8 @@ class Controller
             prompt
          end
          if user
-            # Need to clean this up with better text and more of a table-style output. Work in progress.
-            puts "\n\nInfo for username #{username}:\n\n"
-            puts "First and last name: \n#{user.given_name} #{user.family_name}\n\n"
-            puts "User suspended? #{user.suspended}"
-            puts "User IP whitelisted? #{user.ip_whitelisted}"
-            puts "Is admin? #{user.admin}"
-            puts "Must change password on next login? #{user.change_password_at_next_login}"
-            puts "Has user logged in yet? #{user.agreed_to_terms}"
-            puts "User quota(MB): #{user.quota_limit}\n"
-            puts "Press enter to continue..."
+            output_user_table(user,username)
+            puts "\n\nPress enter to continue..."
             gets
             system("clear")
             prompt
@@ -193,6 +185,22 @@ class Controller
 
    end
    
+   # Outputs a cleanly formatted table with the information about a user in the domain.
+   # Feel free to comment out any of the lines for info you don't need.
+   # For instance, I have zero use for 'ip_whitelisted' and 'quota'.
+   def output_user_table(retrieved_user,username)
+      puts "*" * 80
+      puts "Info for username #{username}:\n\n"
+      puts "First and last name:".ljust(40) + "#{retrieved_user.given_name} #{retrieved_user.family_name}".ljust(40)
+      puts "User suspended?".ljust(40) + retrieved_user.suspended.ljust(40)
+      puts "User IP whitelisted?".ljust(40) + retrieved_user.ip_whitelisted.ljust(40)
+      puts "Is admin?".ljust(40) + retrieved_user.admin.ljust(40)
+      puts "Must change password on next login?".ljust(40) + retrieved_user.change_password_at_next_login.ljust(40)
+      puts "Has user logged in yet?".ljust(40) + retrieved_user.agreed_to_terms.ljust(40)
+      puts "User quota in MB:".ljust(40) + retrieved_user.quota_limit.ljust(40)
+   end
+   
+   
    # gtfo
    def bail
    system("clear")
@@ -203,6 +211,7 @@ class Controller
       @created_users.each do |user|
          puts "#{user[:fname].capitalize} #{user[:lname].capitalize}\nUsername: #{user[:uname]}\n\n"
       end
+      puts "-" * 40 + "\n"
    end
    # output users deleted in this session.
    if @deleted_users.any?
@@ -210,8 +219,9 @@ class Controller
       @deleted_users.each do |user|
          puts "#{user}\n\n"
       end
+      puts "-" * 40 + "\n"
    end
-   sleep 2
+   sleep 1
    exit!
 
 
