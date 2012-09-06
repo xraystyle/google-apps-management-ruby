@@ -1,7 +1,7 @@
 xraystyle's Google Apps User Provisioning Tool
 
 
-This is a small app that acts as a CLI for your Google Apps domain.
+This is a ruby app that acts as a CLI for your Google Apps domain.
 
 The app uses the Google Apps provisioning API Ruby client found here: http://code.google.com/p/gdatav2rubyclientlib/
 
@@ -11,3 +11,12 @@ More info on that here: http://highline.rubyforge.org/
 Currently the app can list user info given a username, and add and delete users from the domain. The app can also list all the users in the domain, either just by username, or by full user info.
 
 The plan is that this app will eventually be able to send welcome emails to newly added users and be able to manage group membership as well.
+
+WHAT YOU NEED TO MAKE THIS WORK:
+
+1. A Mac or Linux box. Code is untested on Linux, but I see no reason why it shouldn't work. (Probably won't work on Windows, and I'm never gonna try to make it work on Windows.)
+
+2. The Ruby 'Highline' gem. '$: gem install highline'
+
+That's about it. Have fun.
+
