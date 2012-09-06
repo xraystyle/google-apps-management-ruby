@@ -11,6 +11,7 @@ class Controller
       @username = @auth.username
       @created_users = []
       @deleted_users = []
+      @fulluserlist = nil
       start_timeout
    end
    
@@ -21,23 +22,24 @@ class Controller
       
    #Get user input to perform actions
    def prompt
-         options = ["a","b","c","d"]
-         puts "\nOptions:\n"
-         puts "A. Create User"
-         puts "B. Delete User"
-         puts "C. Get A User's Info"
-         puts "D. Exit"
-         STDOUT.sync = true
-         print "> " 
+      $stdout.sync = true
+      options = ["a","b","c","d","quit","exit"]
+      puts "\nOptions:\n"
+      puts "A. Create User"
+      puts "B. Delete User"
+      puts "C. Get A User's Info"
+      puts "D. List All Users\n\n"
+      puts "To exit, type \"quit\", or \"exit\""
+      print "> " 
+      response = gets.chomp.downcase.strip
+      
+      while !options.include?(response)
+         puts 'Try again. ("A"", "B", "C", "D" or "quit")'
+         print "> "
          response = gets.chomp.downcase.strip
-         
-         while !options.include?(response)
-            puts 'Try again. ("A"", "B", "C" or "D")'
-            print "> "
-            response = gets.chomp.downcase.strip
-         end
-         
-         do_action(response)                      
+      end
+      
+      do_action(response)                      
    end
    
    # Get the action returned from 'prompt'. Clean up the input and pass to appropriate method.
@@ -50,6 +52,8 @@ class Controller
       when "c"
          get_info
       when "d"
+         list_all_users
+      when "quit", "exit"
          bail
       end
    end
@@ -118,7 +122,7 @@ class Controller
       y_n = gets.chomp.strip.downcase
       
       case y_n
-      when "y" || "yes"
+      when "y", "yes"
          # Check that creds are still valid, then delete the user.
          if timed_out? == false
             #template: delete_user(username)
@@ -143,7 +147,7 @@ class Controller
             @session = @auth.gapps_session
             delete_user
          end
-      when "n" || "no"
+      when "n", "no"
          puts "/nUser deletion cancelled. No changes have been made.\n"
          prompt
       else
@@ -168,7 +172,7 @@ class Controller
             prompt
          end
          if user
-            output_user_table(user,username)
+            output_user_table(user)
             puts "\n\nPress enter to continue..."
             gets
             system("clear")
@@ -185,9 +189,9 @@ class Controller
    # Outputs a cleanly formatted table with the information about a user in the domain.
    # Feel free to comment out any of the lines for info you don't need.
    # For instance, I have zero use for 'ip_whitelisted' and 'quota'.
-   def output_user_table(retrieved_user,username)
+   def output_user_table(retrieved_user)
       puts "*" * 80
-      puts "Info for username #{username}:\n\n"
+      puts "Info for username --#{retrieved_user.username}--\n\n"
       puts "First and last name:".ljust(40) + "#{retrieved_user.given_name} #{retrieved_user.family_name}".ljust(40)
       puts "User suspended?".ljust(40) + retrieved_user.suspended.ljust(40)
       # puts "User IP whitelisted?".ljust(40) + retrieved_user.ip_whitelisted.ljust(40)
@@ -197,17 +201,80 @@ class Controller
       # puts "User quota in MB:".ljust(40) + retrieved_user.quota_limit.ljust(40)
    end
    
+   def output_userlist
+      if !@fulluserlist
+         @fulluserlist = @session.retrieve_all_users
+      end
+      puts "User list retrieved. How would you like to display?"
+      puts "A. Usernames Only"
+      puts "B. Full User Info"
+      print "> "
+      a_b = gets.chomp.strip.downcase
+      case a_b
+      when "a"
+         puts 
+         puts "*" * 80
+         @fulluserlist.each do |user|
+            puts user.username
+         end
+         puts "*" * 80
+      when "b"
+         puts
+         @fulluserlist.each do |user|
+            output_user_table(user)
+         end
+         puts "*" * 80
+      end
+   end
+
+   def list_all_users
+      if !@fulluserlist
+         system("clear")
+         puts "Retreiving all users for a domain can take a long time \ndepending on the number of users.\n\nDo you want to continue? (y/n)"
+         print "> "
+         y_n = gets.chomp.strip.downcase
+         case y_n
+         when "n", "no"
+            puts "User listing cancelled."
+            $stdout.sync = true
+            5.times do
+               putc('.')
+               sleep(0.3)
+            end
+            system("clear")
+            prompt
+         when "y", "yes"
+            output_userlist
+            puts "\nPress \"Enter\" to continue..."
+            gets
+            system("clear")
+            prompt
+         end
+      else
+         output_userlist
+         puts "\nPress \"Enter\" to continue..."
+         gets
+         system("clear")
+         prompt
+      end
+
+   end
+
    # gtfo
    def bail
       system("clear")
-      puts "\n\nThanks for using xraystyle's GApps User Provisioning Tool!\n\n"
+      puts "\n\n"
+      puts "Thanks for using xraystyle's GApps User Provisioning Tool!".center(80)
+      puts "\n\n"
+      puts "*" * 80
+      puts "\n\n"
       # output users created in this session.
       if @created_users.any?
          puts "Created Users:\n\n"
          @created_users.each do |user|
             puts "#{user[:fname].capitalize} #{user[:lname].capitalize}\nUsername: #{user[:uname]}\n\n"
          end
-         puts "-" * 40 + "\n"
+         puts "-" * 80 + "\n"
       end
       # output users deleted in this session.
       if @deleted_users.any?
@@ -215,7 +282,7 @@ class Controller
          @deleted_users.each do |user|
             puts "#{user}\n\n"
          end
-         puts "-" * 40 + "\n"
+         puts "-" * 80 + "\n"
       end
       sleep 1
       exit!

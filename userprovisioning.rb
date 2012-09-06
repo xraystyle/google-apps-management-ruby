@@ -18,8 +18,11 @@ include GAppsProvisioning
 
 system "clear"
 
-
-puts "\n\nxraystyle's GApps User Provisioning Tool\n\n"
+puts "\n\n"
+puts "xraystyle's GApps User Provisioning Tool".center(80)
+puts "\n\n"
+puts "*" * 80
+puts "\n\n"
 
 controller = Controller.new
 
