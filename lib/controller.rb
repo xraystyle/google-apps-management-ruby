@@ -40,7 +40,7 @@ class Controller
       puts "Options:\n"
       puts "A. Create User"
       puts "B. Delete User"
-      puts "C. Get A User's Info"
+      puts "C. Get User Info"
       puts "D. List All Users\n\n"
       puts "To exit, type \"quit\", or \"exit\""
       print "> " 
@@ -242,14 +242,23 @@ class Controller
       case a_b
       when "a"
          num = 1
+         line_toggler = 0
          puts 
          puts "*" * 80
          puts "\nUsernames for this domain:\n\n"
          @fulluserlist.each do |user|
-            puts "#{num}. --#{user.username}--"
-            num += 1
+            case line_toggler.even?
+            when true 
+               print "#{num}. #{user.username}".ljust(40)
+               num += 1
+               line_toggler += 1
+            when false
+               puts "#{num}. #{user.username}".ljust(40)
+               num += 1
+               line_toggler += 1
+            end
          end
-         puts
+         puts "\n"
          puts "*" * 80
       when "b"
          puts
