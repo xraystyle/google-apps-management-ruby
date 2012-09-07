@@ -2,7 +2,6 @@
 
 # xraystyle's GApps User Provisioning Tool 
 # https://github.com/xraystyle/google-apps-management-ruby
-require 'usermanagement'
 
 class Controller
 

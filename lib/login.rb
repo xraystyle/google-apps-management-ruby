@@ -3,10 +3,6 @@
 # xraystyle's GApps User Provisioning Tool 
 # https://github.com/xraystyle/google-apps-management-ruby
 
-require 'highline/import'
-require 'provisioningapi'
-include GAppsProvisioning
-
 class LogIn
    
    attr_accessor :username, :gapps_session
