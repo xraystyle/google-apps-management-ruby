@@ -5,7 +5,10 @@
 
 class Controller
 
+
+
    def initialize
+      print_header
       @auth = LogIn.new
       @session = @auth.gapps_session
       @username = @auth.username
@@ -19,12 +22,22 @@ class Controller
       # Start doing shit.
       prompt      
    end
-      
+
+   def print_header
+      puts "\n\n"
+      puts "xraystyle's GApps User Provisioning Tool".center(80)
+      puts "\n\n"
+      puts "*" * 80
+      puts "\n\n"
+   end
+
    #Get user input to perform actions
    def prompt
+
       $stdout.sync = true
       options = ["a","b","c","d","quit","exit"]
-      puts "\nOptions:\n"
+      print_header
+      puts "Options:\n"
       puts "A. Create User"
       puts "B. Delete User"
       puts "C. Get A User's Info"
@@ -63,8 +76,10 @@ class Controller
       user_data = {}
       default_pass = "changeme456"
       system("clear")
-      puts "Create A User\n\n"
-      
+      puts "\n\nCreate A User\n\n"
+      puts "*" * 80
+      puts "\n\n"
+
       print "Enter the new user's first name: "
       user_data[:fname] = gets.chomp.strip.capitalize
       
@@ -112,7 +127,9 @@ class Controller
    #delete a user
    def delete_user
       system("clear")
-      puts "Create A User\n\n"
+      puts "\n\nDelete A User\n\n"
+      puts "*" * 80
+      puts "\n\n"
       # Get the user to delete.
       print "Enter the username of the user you'd like to delete: "
       response = gets.chomp.strip.downcase
@@ -149,9 +166,15 @@ class Controller
          end
       when "n", "no"
          puts "/nUser deletion cancelled. No changes have been made.\n"
+            puts "Press enter to continue..."
+            gets
+            system("clear")
          prompt
       else
          puts "/nBad input, user deletion cancelled. Try again.\n"
+            puts "Press enter to continue..."
+            gets
+            system("clear")
          prompt
       end
    end
@@ -159,6 +182,9 @@ class Controller
    #get user info
    def get_info
       system("clear")
+      puts "\n\nRetrieve User Info\n\n"
+      puts "*" * 80
+      puts "\n\n"
       print "Enter the username you want to retrieve info for: "
       username=gets.chomp.downcase.strip
       
@@ -169,6 +195,9 @@ class Controller
          rescue GDataError => e
             puts "User retrieval failed for username \"#{username}\"."
             puts "Reason : "+e.reason
+            puts "Press enter to continue..."
+            gets
+            system("clear")
             prompt
          end
          if user
@@ -212,11 +241,15 @@ class Controller
       a_b = gets.chomp.strip.downcase
       case a_b
       when "a"
+         num = 1
          puts 
          puts "*" * 80
+         puts "\nUsernames for this domain:\n\n"
          @fulluserlist.each do |user|
-            puts user.username
+            puts "#{num}. --#{user.username}--"
+            num += 1
          end
+         puts
          puts "*" * 80
       when "b"
          puts
@@ -230,7 +263,12 @@ class Controller
    def list_all_users
       if !@fulluserlist
          system("clear")
-         puts "Retreiving all users for a domain can take a long time \ndepending on the number of users.\n\nDo you want to continue? (y/n)"
+         puts "\n\nList All Users\n\n"
+         puts "*" * 80
+         puts "\n\n"
+         puts "Retreiving all users for a domain can take a long time depending on "
+         puts "the number of users but only needs to be retrieved once per session."
+         puts "Do you want to continue?(y/n)"
          print "> "
          y_n = gets.chomp.strip.downcase
          case y_n
@@ -244,8 +282,21 @@ class Controller
             system("clear")
             prompt
          when "y", "yes"
-            output_userlist
-            puts "\nPress \"Enter\" to continue..."
+            if timed_out? == false
+               output_userlist
+               puts "\nPress \"Enter\" to continue..."
+               gets
+               system("clear")
+               prompt
+            else
+               puts "Session timed out, please re-authenticate."
+               @auth = LogIn.new(@username)
+               @session = @auth.gapps_session
+               list_all_users
+            end
+         else
+            puts "Bad input, user listing cancelled."
+            puts "Press \"Enter\" to continue..."
             gets
             system("clear")
             prompt
@@ -257,7 +308,6 @@ class Controller
          system("clear")
          prompt
       end
-
    end
 
    # gtfo
