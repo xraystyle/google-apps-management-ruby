@@ -19,4 +19,3 @@ WHAT YOU NEED TO MAKE THIS WORK:
 2. The Ruby 'Highline' gem. '$: gem install highline'
 
 That's about it. Have fun.
-

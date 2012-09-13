@@ -1,4 +1,7 @@
+#!/usr/bin/ruby
 
+# xraystyle's GApps User Provisioning Tool 
+# https://github.com/xraystyle/google-apps-management-ruby
 
 class UserManagement
 
@@ -135,6 +138,8 @@ class UserManagement
       # template: retrieve_user(username)
          begin
             user=@session.retrieve_user(username)
+            nicks=@session.retrieve_nicknames(username)
+
          rescue GDataError => e
             puts "User retrieval failed for username \"#{username}\"."
             puts "Reason : "+e.reason
@@ -144,7 +149,7 @@ class UserManagement
             @controller.prompt
          end
          if user
-            output_user_table(user)
+            output_user_table(user,nicks)
             puts "\n\nPress enter to continue..."
             gets
             system("clear")
@@ -161,10 +166,23 @@ class UserManagement
    # Outputs a cleanly formatted table with the information about a user in the domain.
    # Feel free to comment out any of the lines for info you don't need.
    # For instance, I have zero use for 'ip_whitelisted' and 'quota'.
-   def output_user_table(retrieved_user)
+   def output_user_table(retrieved_user,retrieved_nics=nil)
       puts "*" * 80
       puts "Info for username --#{retrieved_user.username}--\n\n"
-      puts "First and last name:".ljust(40) + "#{retrieved_user.given_name} #{retrieved_user.family_name}".ljust(40)
+      puts "First and last name:".ljust(40) + "#{retrieved_user.given_name} #{retrieved_user.family_name}\n".ljust(40)
+      first_print = 0
+      if retrieved_nics
+         print "Nicknames:".ljust(40)
+         retrieved_nics.each do |nick|
+            if first_print == 0
+               puts nick.nickname
+               first_print += 1
+            else 
+               puts " ".ljust(40) + nick.nickname.ljust(40)
+            end
+         end
+      end
+      puts
       puts "User suspended?".ljust(40) + retrieved_user.suspended.ljust(40)
       # puts "User IP whitelisted?".ljust(40) + retrieved_user.ip_whitelisted.ljust(40)
       puts "Is admin?".ljust(40) + retrieved_user.admin.ljust(40)
@@ -179,7 +197,8 @@ class UserManagement
       end
       puts "User list retrieved. How would you like to display?"
       puts "A. Usernames Only"
-      puts "B. Full User Info"
+      puts "B. Full User Info\n\n"
+      puts "Note: Full user list does not include nicknames. Get info for a specific user to see nicks.\n"
       print "> "
       a_b = gets.chomp.strip.downcase
       case a_b
@@ -263,6 +282,8 @@ class UserManagement
    end
 
       #### Start Timeout ####
+
+
    # start_timeout spins off a new thread that sleeps
    # for 5 minutes, then sets the user's authenticated session
    # back to nil. This prevents the user's password from being
