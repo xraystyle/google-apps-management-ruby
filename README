@@ -18,4 +18,6 @@ WHAT YOU NEED TO MAKE THIS WORK:
 
 2. The Ruby 'Highline' gem. '$: gem install highline'
 
+3. I just recently tested this on Ruby 1.9.3. It doesn't work, and the issue appears to be with the API Ruby Client. I'm not gonna take the time to dig through their code to fix it. 
+
 That's about it. Have fun.

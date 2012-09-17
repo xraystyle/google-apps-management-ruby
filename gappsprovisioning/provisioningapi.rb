@@ -249,7 +249,7 @@ module GAppsProvisioning #:nodoc:
 		#			myapps = ProvisioningApi.new('root@mydomain.com','PaSsWoRd')
 		#			user = myapps.rename_user('jsmith','jdoe')
 		#
-		#		It is recommended to log out rhe user from all browser sessions and service before renaming.
+		#		It is recommended to log out the user from all browser sessions and service before renaming.
 		#              Once renamed, the old username becomes a nickname of the new username.
 		#		Note from Google: Google Talk will lose all remembered chat invitations after renaming. 
 		#		The user must request permission to chat with friends again. 

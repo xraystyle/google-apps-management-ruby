@@ -42,8 +42,7 @@ class LogIn
          @username = user
       else
          print "Enter your GApps email address: "
-         @username = gets.chomp.strip.downcase
-         
+         @username = gets.chomp.strip.downcase         
          # using highline for input on more than one run of a loop causes intermittent errors
          # in Ruby 1.8.7 on Mac OS X 10.8 for some reason. Changed from the highline 'ask' below
          # to the 'print/gets' above.

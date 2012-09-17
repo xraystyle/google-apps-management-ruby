@@ -23,10 +23,7 @@ class Controller
       @username = @auth.username
       @@current_controller = self
       @user_manager = UserManagement.new(@session)
-      # @created_users = []
-      # @deleted_users = []
-      # @fulluserlist = nil
-      # start_timeout
+      #@group_manager = GroupManagement.new(@session)
    end
    
    def run!

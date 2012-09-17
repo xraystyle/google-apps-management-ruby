@@ -3,6 +3,8 @@
 # xraystyle's GApps User Provisioning Tool 
 # https://github.com/xraystyle/google-apps-management-ruby
 
+include GAppsProvisioning
+
 class UserManagement
 
 	attr_accessor :created_users, :deleted_users
@@ -139,7 +141,7 @@ class UserManagement
          begin
             user=@session.retrieve_user(username)
             nicks=@session.retrieve_nicknames(username)
-
+            groups=@session.retrieve_groups(username)
          rescue GDataError => e
             puts "User retrieval failed for username \"#{username}\"."
             puts "Reason : "+e.reason
@@ -148,13 +150,15 @@ class UserManagement
             system("clear")
             @controller.prompt
          end
+         
          if user
-            output_user_table(user,nicks)
+            output_user_table(user,nicks,groups)
             puts "\n\nPress enter to continue..."
             gets
             system("clear")
             @controller.prompt
          end
+      
       else
          puts "Session timed out, please re-authenticate."
          @auth = LogIn.new(@username)
@@ -166,12 +170,13 @@ class UserManagement
    # Outputs a cleanly formatted table with the information about a user in the domain.
    # Feel free to comment out any of the lines for info you don't need.
    # For instance, I have zero use for 'ip_whitelisted' and 'quota'.
-   def output_user_table(retrieved_user,retrieved_nics=nil)
+   def output_user_table(retrieved_user,retrieved_nics=nil,retrieved_groups=nil)
       puts "*" * 80
       puts "Info for username --#{retrieved_user.username}--\n\n"
       puts "First and last name:".ljust(40) + "#{retrieved_user.given_name} #{retrieved_user.family_name}\n".ljust(40)
-      first_print = 0
+      
       if retrieved_nics
+         first_print = 0
          print "Nicknames:".ljust(40)
          retrieved_nics.each do |nick|
             if first_print == 0
@@ -181,8 +186,23 @@ class UserManagement
                puts " ".ljust(40) + nick.nickname.ljust(40)
             end
          end
+         puts
       end
-      puts
+      
+      if retrieved_groups
+         first_print = 0
+         print "Groups:".ljust(40)
+         retrieved_groups.each do |group|
+            if first_print == 0
+               puts group.group_id
+               first_print += 1
+            else 
+               puts " ".ljust(40) + group.group_id.ljust(40)
+            end
+         end
+         puts
+      end
+
       puts "User suspended?".ljust(40) + retrieved_user.suspended.ljust(40)
       # puts "User IP whitelisted?".ljust(40) + retrieved_user.ip_whitelisted.ljust(40)
       puts "Is admin?".ljust(40) + retrieved_user.admin.ljust(40)
@@ -198,7 +218,7 @@ class UserManagement
       puts "User list retrieved. How would you like to display?"
       puts "A. Usernames Only"
       puts "B. Full User Info\n\n"
-      puts "Note: Full user list does not include nicknames. Get info for a specific user to see nicks.\n"
+      puts "Note: Full user info does not list nicknames or group membership. \nGet info for a specific user to see nicks and groups for a user.\n"
       print "> "
       a_b = gets.chomp.strip.downcase
       case a_b
