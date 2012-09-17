@@ -142,9 +142,11 @@ class UserManagement
             user=@session.retrieve_user(username)
             nicks=@session.retrieve_nicknames(username)
             groups=@session.retrieve_groups(username)
-         rescue GDataError => e
+         rescue StandardError => e
             puts "User retrieval failed for username \"#{username}\"."
-            puts "Reason : "+e.reason
+            if e.to_s.include? "undefined"
+               puts "Reason : User not found."
+            end
             puts "Press enter to continue..."
             gets
             system("clear")
