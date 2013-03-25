@@ -18,6 +18,9 @@ WHAT YOU NEED TO MAKE THIS WORK:
 
 2. The Ruby 'Highline' gem. '$: gem install highline'
 
-3. I just recently tested this on Ruby 1.9.3. It doesn't work, and the issue appears to be with the API Ruby Client. I'm not gonna take the time to dig through their code to fix it. 
+You may need to dial in your environment somewhat to make this work properly. I've got this working with RVM using Ruby 2.0.0 on OS X 10.8.2.
 
-That's about it. Have fun.
+The main tweak I had to make was to install the curl-ca-bundle via Macports (sudo port install curl-ca-bundle), then point Net::HTTPS at the path to the cert store. It's in gappsprovisioning/connection.rb on line 33. If you're
+using a different cert store you'll have to update the path there. If you feel like monkeying with environment
+variables you can take a look here: http://mentalized.net/journal/2012/08/10/ssl_certificate_woes_with_ruby_19_and_os_x/
+
