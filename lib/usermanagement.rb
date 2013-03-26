@@ -18,6 +18,45 @@ class UserManagement
 		start_timeout
 	end
 
+   def user_prompt
+
+      $stdout.sync = true
+      options = ["a","b","c","d","menu"]
+      system "clear"
+      @controller.print_header("User Management")
+      puts "Options:\n"
+      puts "A. Create User"
+      puts "B. Delete User"
+      puts "C. Get User Info"
+      puts "D. List All Users\n\n"
+      puts "To go back to the main menu, type \"Menu\""
+      print "> " 
+      response = gets.chomp.downcase.strip
+      
+      while !options.include?(response)
+         puts 'Try again. ("A"", "B", "C", "D" or "Menu")'
+         print "> "
+         response = gets.chomp.downcase.strip
+      end
+      
+      user_action(response)                      
+   end
+
+   def user_action(action)
+      case action
+      when "a"
+         create_user
+      when "b"
+         delete_user
+      when "c"
+         get_info
+      when "d"
+         list_all_users
+      when "menu"
+          @controller.prompt
+       end
+   end
+
 
    #create a user
    def create_user
@@ -53,7 +92,7 @@ class UserManagement
          rescue GDataError => e
             puts "User creation failed, retry."
             puts "errorcode = " +e.code, "input : "+e.input, "reason : "+e.reason
-            @controller.prompt
+            user_prompt
          end
          
          @created_users << user_data
@@ -62,7 +101,7 @@ class UserManagement
          puts "Press enter to continue..."
          gets
          system("clear")
-         @controller.prompt
+         user_prompt
          
       else
          puts "Session timed out, please re-authenticate."
@@ -96,7 +135,7 @@ class UserManagement
             rescue GDataError => e
                puts "User deletion failed for user \"#{response}\"."
                puts "Reason : "+e.reason
-               @controller.prompt
+               user_prompt
             end
 
             @deleted_users << response
@@ -105,7 +144,7 @@ class UserManagement
             puts "Press enter to continue..."
             gets
             system("clear")
-            @controller.prompt
+            user_prompt
          else
             puts "Session timed out, please re-authenticate."
             @auth = LogIn.new(@username)
@@ -117,13 +156,13 @@ class UserManagement
             puts "Press enter to continue..."
             gets
             system("clear")
-         @controller.prompt
+         user_prompt
       else
          puts "/nBad input, user deletion cancelled. Try again.\n"
             puts "Press enter to continue..."
             gets
             system("clear")
-         @controller.prompt
+         user_prompt
       end
    end
    
@@ -150,7 +189,7 @@ class UserManagement
             puts "Press enter to continue..."
             gets
             system("clear")
-            @controller.prompt
+            user_prompt
          end
          
          if user
@@ -158,7 +197,7 @@ class UserManagement
             puts "\n\nPress enter to continue..."
             gets
             system("clear")
-            @controller.prompt
+            user_prompt
          end
       
       else
@@ -273,14 +312,14 @@ class UserManagement
                sleep(0.3)
             end
             system("clear")
-            @controller.prompt
+            user_prompt
          when "y", "yes"
             if timed_out? == false
                output_userlist
                puts "\nPress \"Enter\" to continue..."
                gets
                system("clear")
-               @controller.prompt
+               user_prompt
             else
                puts "Session timed out, please re-authenticate."
                @auth = LogIn.new(@username)
@@ -292,14 +331,14 @@ class UserManagement
             puts "Press \"Enter\" to continue..."
             gets
             system("clear")
-            @controller.prompt
+            user_prompt
          end
       else
          output_userlist
          puts "\nPress \"Enter\" to continue..."
          gets
          system("clear")
-         @controller.prompt
+         user_prompt
       end
    end
 

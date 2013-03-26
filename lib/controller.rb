@@ -31,9 +31,13 @@ class Controller
       prompt      
    end
 
-   def print_header
+   def print_header(subsection=nil)
       puts "\n\n"
       puts "xraystyle's GApps User Provisioning Tool".center(80)
+      if subsection
+         puts "\n"
+         puts "#{subsection}".center(80)
+      end
       puts "\n\n"
       puts "*" * 80
       puts "\n\n"
@@ -43,19 +47,17 @@ class Controller
    def prompt
 
       $stdout.sync = true
-      options = ["a","b","c","d","quit","exit"]
+      options = ["a","b","quit","exit"]
       print_header
       puts "Options:\n"
-      puts "A. Create User"
-      puts "B. Delete User"
-      puts "C. Get User Info"
-      puts "D. List All Users\n\n"
+      puts "A. User Management"
+      puts "B. Group Management"
       puts "To exit, type \"quit\", or \"exit\""
       print "> " 
       response = gets.chomp.downcase.strip
       
       while !options.include?(response)
-         puts 'Try again. ("A"", "B", "C", "D" or "quit")'
+         puts 'Try again. ("A"", "B", or "quit")'
          print "> "
          response = gets.chomp.downcase.strip
       end
@@ -67,13 +69,9 @@ class Controller
    def do_action(action)
       case action
       when "a"
-         @user_manager.create_user
+         @user_manager.user_prompt
       when "b"
-         @user_manager.delete_user
-      when "c"
-         @user_manager.get_info
-      when "d"
-         @user_manager.list_all_users
+         @group_manager.group_prompt
       when "quit", "exit"
          bail
       end
