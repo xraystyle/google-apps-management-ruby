@@ -18,7 +18,7 @@ WHAT YOU NEED TO MAKE THIS WORK:
 
 1. A Mac or Linux box. Code is untested on Linux, but I see no reason why it shouldn't work. (Probably won't work on Windows, and I'm never gonna try to make it work on Windows.)
 
-2. The Ruby 'Highline' gem. '$: gem install highline'
+2. The Ruby 'Highline' gem. `$: gem install highline`
 
 You may need to dial in your environment somewhat to make this work properly. I've got this working with RVM using Ruby 2.0.0 on OS X 10.8.2.
 
