@@ -1,5 +1,5 @@
 xraystyle's Google Apps User Provisioning Tool
-
+===============================================
 
 This is a ruby app that acts as a CLI for your Google Apps domain.
 
