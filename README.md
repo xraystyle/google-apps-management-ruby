@@ -1,5 +1,5 @@
 Google Apps User Provisioning Tool
-===============================================
+---------------------------------------
 
 This is a ruby app that acts as a CLI for your Google Apps domain.
 
@@ -13,7 +13,7 @@ Currently the app can list user info given a username, and add and delete users 
 The plan is that this app will eventually be able to send welcome emails to newly added users and be able to manage group membership as well.
 
 WHAT YOU NEED TO MAKE THIS WORK:
---------------------------------
+===================================
 
 1.	A Mac or Linux box. Code is untested on Linux, but I see no reason why it shouldn't work. (Probably won't 	  work on Windows, and I'm never gonna try to make it work on Windows.)
 
