@@ -23,7 +23,7 @@ class Controller
       @username = @auth.username
       @@current_controller = self
       @user_manager = UserManagement.new(@session)
-      #@group_manager = GroupManagement.new(@session)
+      @group_manager = GroupManagement.new(@session)
    end
    
    def run!

@@ -15,6 +15,7 @@ require 'net/https'
 require 'login'
 require 'controller'
 require 'usermanagement'
+require 'groupmanagement'
 include GAppsProvisioning
 
 system "clear"
