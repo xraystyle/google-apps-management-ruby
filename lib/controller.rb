@@ -33,7 +33,7 @@ class Controller
 
    def print_header(subsection=nil)
       puts "\n\n"
-      puts "xraystyle's GApps User Provisioning Tool".center(80)
+      puts "GApps User Provisioning".center(80)
       if subsection
          puts "\n"
          puts "#{subsection}".center(80)
@@ -81,7 +81,7 @@ class Controller
    def bail
       system("clear")
       puts "\n\n"
-      puts "Thanks for using xraystyle's GApps User Provisioning Tool!".center(80)
+      puts "Thanks for using GApps User Provisioning!".center(80)
       puts "\n\n"
       puts "*" * 80
       puts "\n\n"
