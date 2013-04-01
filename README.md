@@ -23,6 +23,14 @@ You may need to dial in your environment somewhat to make this work properly. I'
 
 The main tweak I had to make was to install the curl-ca-bundle via Macports (`sudo port install curl-ca-bundle`), then point Net::HTTPS at the path to the cert store. It's in gappsprovisioning/connection.rb on line 33. If you're using a different cert store you'll have to update the path there. If you feel like monkeying with environment variables you can take a look here: http://mentalized.net/journal/2012/08/10/ssl_certificate_woes_with_ruby_19_and_os_x/
 
+
+USAGE NOTES:
+-------------
+
+1.	When creating a user account, the user is assigned a default password. This password is set on line 63 of lib/usermanagement.rb. You can
+	set it to whatever you'd like.
+
+
 CHANGELOG
 ------------
 

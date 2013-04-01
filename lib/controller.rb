@@ -5,6 +5,8 @@
 
 class Controller
 
+   attr_accessor :session, :username
+
 ####### Class Variables/Class Methods #######
    @@current_controller = nil
 
@@ -22,10 +24,17 @@ class Controller
       @session = @auth.gapps_session
       @username = @auth.username
       @@current_controller = self
-      @user_manager = UserManagement.new(@session)
-      @group_manager = GroupManagement.new(@session)
+      @user_manager = UserManagement.new
+      @group_manager = GroupManagement.new
    end
    
+   def re_auth(username)
+      puts
+      puts "Session timed out, please re-authenticate."
+      @auth = LogIn.new(@@current_controller.username)
+      @session = @auth.gapps_session
+   end
+
    def run!
       # Start doing shit.
       prompt      
@@ -103,6 +112,16 @@ class Controller
       end
       sleep 1
       exit!
+   end
+
+   def timed_out?
+      
+      if @session
+         false
+      else
+         true
+      end
+      
    end
 
 #############################################   
