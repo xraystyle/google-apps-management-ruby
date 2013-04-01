@@ -12,6 +12,8 @@ class LogIn
       ask_for_creds(user)
       begin
          @gapps_session = ProvisioningApi.new(@username, @password)
+         # Set password to nil as soon as we're done with it.
+         @password = nil
       rescue 
          puts "Log-in failed. Likely incorrect username or password.\n Retry? (y/n)"
          response = gets.chomp.downcase.strip
@@ -28,7 +30,7 @@ class LogIn
          end
          
       end
-         
+      start_timeout  
    end
    
    #### Ask For Credentials ####
@@ -51,4 +53,20 @@ class LogIn
       @password = ask("Enter your password:  ") { |q| q.echo = "x" }
    end
     
+      #### Start Timeout ####
+
+
+   # start_timeout spins off a new thread that sleeps
+   # for 5 minutes, then sets the user's authenticated session
+   # back to nil. This prevents the user's Google Apps session from being
+   # stored indefinetly while the app is running.
+
+   def start_timeout
+          timeout=Thread.new {
+             sleep 15
+             @gapps_session = nil
+             Controller.current_controller.session = nil
+             }
+   end
+
 end

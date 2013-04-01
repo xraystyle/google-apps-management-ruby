@@ -9,13 +9,11 @@ class UserManagement
 
 	attr_accessor :created_users, :deleted_users
 
-	def initialize(session)
-		@session = session
+	def initialize
 		@controller = Controller.current_controller
 		@created_users = []
 		@deleted_users = []
 		@fulluserlist = nil
-		start_timeout
 	end
 
    def user_prompt
@@ -53,7 +51,8 @@ class UserManagement
       when "d"
          list_all_users
       when "menu"
-          @controller.prompt
+         system 'clear'
+         @controller.prompt
        end
    end
 
@@ -85,10 +84,10 @@ class UserManagement
       # to the need for a user to change their password on first login by default, which
       # is more secure than setting a password and notifying the user anyway.
       
-      if timed_out? == false
+      if @controller.timed_out? == false
          #template: create_user(username, given_name, family_name, password, passwd_hash_function=nil, quota=nil)
          begin
-            @session.create_user(user_data[:uname], user_data[:fname], user_data[:lname], default_pass)
+            @controller.session.create_user(user_data[:uname], user_data[:fname], user_data[:lname], default_pass)
          rescue GDataError => e
             puts "User creation failed, retry."
             puts "errorcode = " +e.code, "input : "+e.input, "reason : "+e.reason
@@ -104,9 +103,7 @@ class UserManagement
          user_prompt
          
       else
-         puts "Session timed out, please re-authenticate."
-         @auth = LogIn.new(@username)
-         @session = @auth.gapps_session
+         @controller.re_auth(@controller.username)
          create_user
       end
    end
@@ -128,10 +125,10 @@ class UserManagement
       case y_n
       when "y", "yes"
          # Check that creds are still valid, then delete the user.
-         if timed_out? == false
+         if @controller.timed_out? == false
             #template: delete_user(username)
             begin
-               @session.delete_user(response)
+               @controller.session.delete_user(response)
             rescue GDataError => e
                puts "User deletion failed for user \"#{response}\"."
                puts "Reason : "+e.reason
@@ -146,9 +143,7 @@ class UserManagement
             system("clear")
             user_prompt
          else
-            puts "Session timed out, please re-authenticate."
-            @auth = LogIn.new(@username)
-            @session = @auth.gapps_session
+            @controller.re_auth(@controller.username)
             delete_user
          end
       when "n", "no"
@@ -175,12 +170,12 @@ class UserManagement
       print "Enter the username you want to retrieve info for: "
       username=gets.chomp.downcase.strip
       
-      if timed_out? == false
+      if @controller.timed_out? == false
       # template: retrieve_user(username)
          begin
-            user=@session.retrieve_user(username)
-            nicks=@session.retrieve_nicknames(username)
-            groups=@session.retrieve_groups(username)
+            user=@controller.session.retrieve_user(username)
+            nicks=@controller.session.retrieve_nicknames(username)
+            groups=@controller.session.retrieve_groups(username)
          rescue StandardError => e
             puts "User retrieval failed for username \"#{username}\"."
             if e.to_s.include? "undefined"
@@ -201,9 +196,7 @@ class UserManagement
          end
       
       else
-         puts "Session timed out, please re-authenticate."
-         @auth = LogIn.new(@username)
-         @session = @auth.gapps_session
+         @controller.re_auth(@controller.username)
          get_info
       end
    end
@@ -254,7 +247,12 @@ class UserManagement
    
    def output_userlist
       if !@fulluserlist
-         @fulluserlist = @session.retrieve_all_users
+         if @controller.timed_out? 
+            @controller.re_auth(@controller.username)
+         else
+         @fulluserlist = @controller.session.retrieve_all_users
+      end
+      
       end
       puts "User list retrieved. How would you like to display?"
       puts "A. Usernames Only"
@@ -314,16 +312,14 @@ class UserManagement
             system("clear")
             user_prompt
          when "y", "yes"
-            if timed_out? == false
+            if @controller.timed_out? == false
                output_userlist
                puts "\nPress \"Enter\" to continue..."
                gets
                system("clear")
                user_prompt
             else
-               puts "Session timed out, please re-authenticate."
-               @auth = LogIn.new(@username)
-               @session = @auth.gapps_session
+               @controller.re_auth(@controller.username)
                list_all_users
             end
          else
@@ -340,25 +336,6 @@ class UserManagement
          system("clear")
          user_prompt
       end
-   end
-
-      #### Start Timeout ####
-
-
-   # start_timeout spins off a new thread that sleeps
-   # for 5 minutes, then sets the user's authenticated session
-   # back to nil. This prevents the user's password from being
-   # stored indefinetly while the app is running.
-
-   def start_timeout
-          timeout=Thread.new {
-             sleep 300
-             @session = nil
-             }
-   end
-
-   def timed_out?
-      return false unless @session == nil 
    end
 
 end

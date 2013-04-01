@@ -5,10 +5,8 @@
 
 class GroupManagement
 	
-	def initialize(session)
-		@session = session
+	def initialize
 		@controller = Controller.current_controller
-		start_timeout
 	end
 
 
@@ -43,14 +41,15 @@ class GroupManagement
       # when "d"
       #    list_all_users
       when "menu"
-          @controller.prompt
+        system 'clear'
+        @controller.prompt
        end
    end
 
 
    def list_all_groups
 
-   		group_list = @session.retrieve_all_groups
+   		group_list = @controller.session.retrieve_all_groups
    		puts "i did something"
    		group_list.each { |e| puts e.group_id  }
    		gets
@@ -59,15 +58,10 @@ class GroupManagement
 
 
 
-	def start_timeout
-    	timeout=Thread.new {
-        	sleep 300
-        	@session = nil
-        	}
-	end
+
 
 	def timed_out?
-    	return false unless @session == nil 
+    	return false unless @controller.session == nil 
 	end
 
 
