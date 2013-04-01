@@ -20,7 +20,7 @@ class UserManagement
 
       $stdout.sync = true
       options = ["a","b","c","d","menu"]
-      system "clear"
+      system("clear")
       @controller.print_header("User Management")
       puts "Options:\n"
       puts "A. Create User"
@@ -51,7 +51,7 @@ class UserManagement
       when "d"
          list_all_users
       when "menu"
-         system 'clear'
+         system("clear")
          @controller.prompt
        end
    end
@@ -84,9 +84,12 @@ class UserManagement
       # to the need for a user to change their password on first login by default, which
       # is more secure than setting a password and notifying the user anyway.
       
-      if @controller.timed_out? == false
-         #template: create_user(username, given_name, family_name, password, passwd_hash_function=nil, quota=nil)
+      if @controller.timed_out?
+         @controller.re_auth(@controller.username)
+         create_user         
+      else
          begin
+            #template: create_user(username, given_name, family_name, password, passwd_hash_function=nil, quota=nil)
             @controller.session.create_user(user_data[:uname], user_data[:fname], user_data[:lname], default_pass)
          rescue GDataError => e
             puts "User creation failed, retry."
@@ -101,10 +104,6 @@ class UserManagement
          gets
          system("clear")
          user_prompt
-         
-      else
-         @controller.re_auth(@controller.username)
-         create_user
       end
    end
    
@@ -125,7 +124,10 @@ class UserManagement
       case y_n
       when "y", "yes"
          # Check that creds are still valid, then delete the user.
-         if @controller.timed_out? == false
+         if @controller.timed_out? 
+            @controller.re_auth(@controller.username)
+            delete_user
+         else
             #template: delete_user(username)
             begin
                @controller.session.delete_user(response)
@@ -142,9 +144,6 @@ class UserManagement
             gets
             system("clear")
             user_prompt
-         else
-            @controller.re_auth(@controller.username)
-            delete_user
          end
       when "n", "no"
          puts "/nUser deletion cancelled. No changes have been made.\n"
@@ -169,9 +168,12 @@ class UserManagement
       puts "\n\n"
       print "Enter the username you want to retrieve info for: "
       username=gets.chomp.downcase.strip
-      
-      if @controller.timed_out? == false
-      # template: retrieve_user(username)
+
+      if @controller.timed_out?
+         @controller.re_auth(@controller.username)
+         get_info            
+      else
+         # template: retrieve_user(username)
          begin
             user=@controller.session.retrieve_user(username)
             nicks=@controller.session.retrieve_nicknames(username)
@@ -194,10 +196,7 @@ class UserManagement
             system("clear")
             user_prompt
          end
-      
-      else
-         @controller.re_auth(@controller.username)
-         get_info
+
       end
    end
    
@@ -249,10 +248,11 @@ class UserManagement
       if !@fulluserlist
          if @controller.timed_out? 
             @controller.re_auth(@controller.username)
+            output_userlist
          else
          @fulluserlist = @controller.session.retrieve_all_users
       end
-      
+
       end
       puts "User list retrieved. How would you like to display?"
       puts "A. Usernames Only"
@@ -312,15 +312,15 @@ class UserManagement
             system("clear")
             user_prompt
          when "y", "yes"
-            if @controller.timed_out? == false
+            if @controller.timed_out?
+               @controller.re_auth(@controller.username)
+               list_all_users
+            else
                output_userlist
                puts "\nPress \"Enter\" to continue..."
                gets
                system("clear")
                user_prompt
-            else
-               @controller.re_auth(@controller.username)
-               list_all_users
             end
          else
             puts "Bad input, user listing cancelled."

@@ -29,6 +29,7 @@ class Controller
    end
    
    def re_auth(username)
+      puts
       puts "Session timed out, please re-authenticate."
       @auth = LogIn.new(@@current_controller.username)
       @session = @auth.gapps_session
@@ -114,7 +115,13 @@ class Controller
    end
 
    def timed_out?
-      return false unless @session == nil 
+      
+      if @session
+         false
+      else
+         true
+      end
+      
    end
 
 #############################################   

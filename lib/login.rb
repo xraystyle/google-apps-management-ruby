@@ -63,7 +63,7 @@ class LogIn
 
    def start_timeout
           timeout=Thread.new {
-             sleep 15
+             sleep 300
              @gapps_session = nil
              Controller.current_controller.session = nil
              }
