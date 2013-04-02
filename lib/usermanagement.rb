@@ -19,7 +19,7 @@ class UserManagement
    def user_prompt
 
       $stdout.sync = true
-      options = ["a","b","c","d","menu"]
+      options = ["a","b","c","d","menu","quit","exit"]
       system("clear")
       @controller.print_header("User Management")
       puts "Options:\n"
@@ -28,6 +28,7 @@ class UserManagement
       puts "C. Get User Info"
       puts "D. List All Users\n\n"
       puts "To go back to the main menu, type \"Menu\""
+      puts "To exit, type \"quit\", or \"exit\""
       print "> " 
       response = gets.chomp.downcase.strip
       
@@ -53,7 +54,9 @@ class UserManagement
       when "menu"
          system("clear")
          @controller.prompt
-       end
+      when "quit", "exit"
+         @controller.bail
+      end
    end
 
 
@@ -266,7 +269,7 @@ class UserManagement
          line_toggler = 0
          puts 
          puts "*" * 80
-         puts "\nUsernames for this domain:\n\n"
+         puts "\nUsernames in this domain:\n\n"
          @fulluserlist.each do |user|
             case line_toggler.even?
             when true 

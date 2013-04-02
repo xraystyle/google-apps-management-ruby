@@ -61,6 +61,7 @@ class Controller
       puts "Options:\n"
       puts "A. User Management"
       puts "B. Group Management"
+      puts
       puts "To exit, type \"quit\", or \"exit\""
       print "> " 
       response = gets.chomp.downcase.strip
