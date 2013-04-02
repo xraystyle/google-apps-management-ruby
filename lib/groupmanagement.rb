@@ -89,6 +89,51 @@ class GroupManagement
     end
 
 
+
+    def create_group
+
+        # create a group
+        # usage: @controller.session.create_group(group_id, properties)
+        
+    end
+
+    def update_group
+        
+        # update group attributes
+        # usage: @controller.session.update_group(group_id, properties)
+
+    end
+
+    def delete_group
+        
+        # delete group
+        # usage: @controller.session.delete_group(group_id)
+
+    end
+
+    
+    def add_member_to_group
+
+        # add member to a group
+        # usage: @controller.session.add_member_to_group(email_address, group_id)
+        
+    end
+
+
+    def remove_member_from_group
+
+        # usage: @controller.session.remove_member_from_group(email_address, group_id)
+        
+    end
+
+    
+
+
+
+
+
+
+
 end
 
 
