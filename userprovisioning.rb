@@ -3,6 +3,8 @@
 # xraystyle's GApps User Provisioning Tool 
 # https://github.com/xraystyle/google-apps-management-ruby
 
+
+
 APP_ROOT= File.dirname(__FILE__)
 
 $:.unshift(File.join(APP_ROOT, 'lib'))
@@ -20,7 +22,11 @@ include GAppsProvisioning
 
 system "clear"
 
+
+
 controller = Controller.new
+
+
 
 system "clear"
 

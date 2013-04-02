@@ -41,6 +41,7 @@ class UserManagement
       user_action(response)                      
    end
 
+
    def user_action(action)
       case action
       when "a"
@@ -104,7 +105,6 @@ class UserManagement
       gets
       system("clear")
       user_prompt
-      
    end
    
    #delete a user
@@ -143,16 +143,16 @@ class UserManagement
          user_prompt
          
       when "n", "no"
-         puts "/nUser deletion cancelled. No changes have been made.\n"
-            puts "Press enter to continue..."
-            gets
-            system("clear")
+         puts "\nUser deletion cancelled. No changes have been made.\n"
+         puts "Press enter to continue..."
+         gets
+         system("clear")
          user_prompt
       else
-         puts "/nBad input, user deletion cancelled. Try again.\n"
-            puts "Press enter to continue..."
-            gets
-            system("clear")
+         puts "\nBad input, user deletion cancelled. Try again.\n"
+         puts "Press enter to continue..."
+         gets
+         system("clear")
          user_prompt
       end
    end
@@ -190,10 +190,9 @@ class UserManagement
          system("clear")
          user_prompt
       end
-
    end
    
-   # Outputs a cleanly formatted table with the information about a user in the domain.
+   # Output a cleanly formatted table with the information about a user in the domain.
    # Feel free to comment out any of the lines for info you don't need.
    # For instance, I have zero use for 'ip_whitelisted' and 'quota'.
    def output_user_table(retrieved_user,retrieved_nics=nil,retrieved_groups=nil)
@@ -238,12 +237,13 @@ class UserManagement
    end
    
    def output_userlist
+      
       if !@fulluserlist
          @controller.check_timeout 
          @fulluserlist = @controller.session.retrieve_all_users
       end
 
-      end
+      
       puts "User list retrieved. How would you like to display?"
       puts "A. Usernames Only"
       puts "B. Full User Info\n\n"
@@ -259,16 +259,6 @@ class UserManagement
          puts "\nUsernames in this domain:\n\n"
          @fulluserlist.each do |user|
 
-            # case line_toggler.even?
-            # when true 
-            #    print "#{num}. #{user.username}".ljust(40)
-            #    num += 1
-            #    line_toggler += 1
-            # when false
-            #    puts "#{num}. #{user.username}".ljust(40)
-            #    num += 1
-            #    line_toggler += 1
-            # end
             if line_toggler % 4 == 0
                puts "#{num}. #{user.username}".ljust(25)
                num += 1
@@ -278,7 +268,6 @@ class UserManagement
                num += 1
                line_toggler += 1
             end
-
 
          end
          puts "\n"
@@ -290,7 +279,10 @@ class UserManagement
          end
          puts "*" * 100
       end
+
    end
+
+
 
    def list_all_users
       if !@fulluserlist
@@ -303,6 +295,7 @@ class UserManagement
          puts "Do you want to continue?(y/n)"
          print "> "
          y_n = gets.chomp.strip.downcase
+         
          case y_n
          when "n", "no"
             puts "User listing cancelled."
@@ -334,6 +327,9 @@ class UserManagement
          system("clear")
          user_prompt
       end
+
    end
+
+
 
 end

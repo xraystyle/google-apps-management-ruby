@@ -404,7 +404,20 @@ module GAppsProvisioning #:nodoc:
 		# Creates a group in your domain and returns a GroupEntry (ATTENTION: the group name is necessary!).
 		# 	ex : 	
 		#		myapps = ProvisioningApi.new('root@mydomain.com','PaSsWoRd')
-		#		group= myapps.create_group("mygroup", ["My Group name", "My Group description", "<emailPermission>"]) 
+		#		group= myapps.create_group("mygroup", ["My Group name", "My Group description", "<emailPermission>"])
+		# 
+		# Below is the documentation for the third item in the array, the nebulous "<emailPermission>". I had 
+		# to dig it out of the GData API docs, it's not documented anywhere else.
+		#
+		# The emailPermission argument sets the permissions level of the group. The permission values are:
+		# 	Owner - Owners of the group
+		# 	Member - Members of the group
+		# 	Domain - Any user who belongs to the same domain as the group
+		# 	Anyone - Any user 
+		#
+		# When using the API to create a group with these, you end up with a group that has custom permissions
+		# for some reason, even though the custom permissions seem to be the same as what the standard choices
+		# offer through the GUI.
 		def create_group(group_id, properties)
 			msg = RequestMessage.new
 			msg.about_group(group_id, properties)

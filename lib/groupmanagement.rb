@@ -92,7 +92,12 @@ class GroupManagement
         @controller.check_timeout
         # create a group
         # usage: @controller.session.create_group(group_id, properties)
-
+        group_data = {}
+        
+        system("clear")
+        puts "\n\nCreate A User\n\n"
+        puts "*" * 100
+        puts "\n\n"
         
     end
 
