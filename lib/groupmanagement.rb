@@ -17,7 +17,10 @@ class GroupManagement
         system "clear"
         @controller.print_header("Group Management")
         puts "Options:\n"
-        puts "A. List All Groups"
+        puts "A. Create a group."
+        puts "B. "
+        puts "C. "
+        puts "D. List all groups."
         puts
         puts "To go back to the main menu, type \"Menu\""
         puts "To exit, type \"quit\", or \"exit\""
@@ -38,13 +41,13 @@ class GroupManagement
     def group_action(action)
         case action
         when "a"
-           list_all_groups
+           
         # when "b"
         #    delete_user
         # when "c"
         #    get_info
-        # when "d"
-        #    list_all_users
+        when "d"
+           list_all_groups
         when "menu"
             system 'clear'
             @controller.prompt
@@ -55,45 +58,41 @@ class GroupManagement
 
 
     def list_all_groups
-        if @controller.timed_out?
-            @controller.re_auth(@controller.username)
-            list_all_groups
-        else
+        @controller.check_timeout
+    	group_list = @controller.session.retrieve_all_groups
+        num = 1
+        line_toggler = 0
+        puts "*" * 100
+        puts "\nGroups in this domain:\n\n"
 
-        	group_list = @controller.session.retrieve_all_groups
-            num = 1
-            line_toggler = 0
-            puts "*" * 100
-            puts "\nGroups in this domain:\n\n"
-
-            group_list.each do |group|
-                case line_toggler.even?
-                when true
-                    print "#{num}. #{group.group_id}".ljust(40)
-                    num += 1
-                    line_toggler += 1
-                when false
-                    puts "#{num}. #{group.group_id}".ljust(40)
-                    num += 1
-                    line_toggler += 1
-                end
+        group_list.each do |group|
+            case line_toggler.even?
+            when true
+                print "#{num}. #{group.group_id}".ljust(40)
+                num += 1
+                line_toggler += 1
+            when false
+                puts "#{num}. #{group.group_id}".ljust(40)
+                num += 1
+                line_toggler += 1
             end
-            puts
-            puts "*" * 100
-            puts
-            puts "Press enter to continue..."
-        	gets
-        	group_prompt
         end
+        puts
+        puts "*" * 100
+        puts
+        puts "Press enter to continue..."
+    	gets
+    	group_prompt
 
     end
 
 
 
     def create_group
-
+        @controller.check_timeout
         # create a group
         # usage: @controller.session.create_group(group_id, properties)
+
         
     end
 
@@ -126,7 +125,7 @@ class GroupManagement
         
     end
 
-    
+
 
 
 

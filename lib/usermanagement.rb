@@ -87,27 +87,24 @@ class UserManagement
       # to the need for a user to change their password on first login by default, which
       # is more secure than setting a password and notifying the user anyway.
       
-      if @controller.timed_out?
-         @controller.re_auth(@controller.username)
-         create_user         
-      else
-         begin
-            #template: create_user(username, given_name, family_name, password, passwd_hash_function=nil, quota=nil)
-            @controller.session.create_user(user_data[:uname], user_data[:fname], user_data[:lname], default_pass)
-         rescue GDataError => e
-            puts "User creation failed, retry."
-            puts "errorcode = " +e.code, "input : "+e.input, "reason : "+e.reason
-            user_prompt
-         end
-         
-         @created_users << user_data
-         puts "\nUser created successfully:\n"
-         puts "#{user_data[:fname].capitalize} #{user_data[:lname].capitalize}\nUsername: #{user_data[:uname]}\n"
-         puts "Press enter to continue..."
-         gets
-         system("clear")
+      @controller.check_timeout
+      begin
+         #template: create_user(username, given_name, family_name, password, passwd_hash_function=nil, quota=nil)
+         @controller.session.create_user(user_data[:uname], user_data[:fname], user_data[:lname], default_pass)
+      rescue GDataError => e
+         puts "User creation failed, retry."
+         puts "errorcode = " +e.code, "input : "+e.input, "reason : "+e.reason
          user_prompt
       end
+      
+      @created_users << user_data
+      puts "\nUser created successfully:\n"
+      puts "#{user_data[:fname].capitalize} #{user_data[:lname].capitalize}\nUsername: #{user_data[:uname]}\n"
+      puts "Press enter to continue..."
+      gets
+      system("clear")
+      user_prompt
+      
    end
    
    #delete a user
@@ -127,27 +124,24 @@ class UserManagement
       case y_n
       when "y", "yes"
          # Check that creds are still valid, then delete the user.
-         if @controller.timed_out? 
-            @controller.re_auth(@controller.username)
-            delete_user
-         else
-            #template: delete_user(username)
-            begin
-               @controller.session.delete_user(response)
-            rescue GDataError => e
-               puts "User deletion failed for user \"#{response}\"."
-               puts "Reason : "+e.reason
-               user_prompt
-            end
-
-            @deleted_users << response
-            puts "\nUser deleted successfully:\n"
-            puts "#{response}"
-            puts "Press enter to continue..."
-            gets
-            system("clear")
+         @controller.check_timeout 
+         #template: delete_user(username)
+         begin
+            @controller.session.delete_user(response)
+         rescue GDataError => e
+            puts "User deletion failed for user \"#{response}\"."
+            puts "Reason : "+e.reason
             user_prompt
          end
+
+         @deleted_users << response
+         puts "\nUser deleted successfully:\n"
+         puts "#{response}"
+         puts "Press enter to continue..."
+         gets
+         system("clear")
+         user_prompt
+         
       when "n", "no"
          puts "/nUser deletion cancelled. No changes have been made.\n"
             puts "Press enter to continue..."
@@ -172,35 +166,31 @@ class UserManagement
       print "Enter the username you want to retrieve info for: "
       username=gets.chomp.downcase.strip
 
-      if @controller.timed_out?
-         @controller.re_auth(@controller.username)
-         get_info            
-      else
-         # template: retrieve_user(username)
-         begin
-            user=@controller.session.retrieve_user(username)
-            nicks=@controller.session.retrieve_nicknames(username)
-            groups=@controller.session.retrieve_groups(username)
-         rescue StandardError => e
-            puts "User retrieval failed for username \"#{username}\"."
-            if e.to_s.include? "undefined"
-               puts "Reason : User not found."
-            end
-            puts "Press enter to continue..."
-            gets
-            system("clear")
-            user_prompt
+      @controller.check_timeout
+      # template: retrieve_user(username)
+      begin
+         user=@controller.session.retrieve_user(username)
+         nicks=@controller.session.retrieve_nicknames(username)
+         groups=@controller.session.retrieve_groups(username)
+      rescue StandardError => e
+         puts "User retrieval failed for username \"#{username}\"."
+         if e.to_s.include? "undefined"
+            puts "Reason : User not found."
          end
-         
-         if user
-            output_user_table(user,nicks,groups)
-            puts "\n\nPress enter to continue..."
-            gets
-            system("clear")
-            user_prompt
-         end
-
+         puts "Press enter to continue..."
+         gets
+         system("clear")
+         user_prompt
       end
+      
+      if user
+         output_user_table(user,nicks,groups)
+         puts "\n\nPress enter to continue..."
+         gets
+         system("clear")
+         user_prompt
+      end
+
    end
    
    # Outputs a cleanly formatted table with the information about a user in the domain.
@@ -249,10 +239,7 @@ class UserManagement
    
    def output_userlist
       if !@fulluserlist
-         if @controller.timed_out? 
-            @controller.re_auth(@controller.username)
-            output_userlist
-         else
+         @controller.check_timeout 
          @fulluserlist = @controller.session.retrieve_all_users
       end
 
@@ -327,16 +314,12 @@ class UserManagement
             system("clear")
             user_prompt
          when "y", "yes"
-            if @controller.timed_out?
-               @controller.re_auth(@controller.username)
-               list_all_users
-            else
-               output_userlist
-               puts "\nPress \"Enter\" to continue..."
-               gets
-               system("clear")
-               user_prompt
-            end
+            @controller.check_timeout
+            output_userlist
+            puts "\nPress \"Enter\" to continue..."
+            gets
+            system("clear")
+            user_prompt
          else
             puts "Bad input, user listing cancelled."
             puts "Press \"Enter\" to continue..."

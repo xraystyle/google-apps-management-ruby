@@ -115,12 +115,10 @@ class Controller
       exit!
    end
 
-   def timed_out?
+   def check_timeout
       
-      if @session
-         false
-      else
-         true
+      unless @session
+         re_auth(@username)        
       end
       
    end
