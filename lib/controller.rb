@@ -42,13 +42,13 @@ class Controller
 
    def print_header(subsection=nil)
       puts "\n\n"
-      puts "GApps User Provisioning".center(80)
+      puts "GApps User Provisioning".center(100)
       if subsection
          puts "\n"
-         puts "#{subsection}".center(80)
+         puts "#{subsection}".center(100)
       end
       puts "\n\n"
-      puts "*" * 80
+      puts "*" * 100
       puts "\n\n"
    end
 
@@ -90,9 +90,9 @@ class Controller
    def bail
       system("clear")
       puts "\n\n"
-      puts "Thanks for using GApps User Provisioning!".center(80)
+      puts "Thanks for using GApps User Provisioning!".center(100)
       puts "\n\n"
-      puts "*" * 80
+      puts "*" * 100
       puts "\n\n"
       # output users created in this session.
       if @user_manager.created_users.any?
@@ -100,7 +100,7 @@ class Controller
          @user_manager.created_users.each do |user|
             puts "#{user[:fname].capitalize} #{user[:lname].capitalize}\nUsername: #{user[:uname]}\n\n"
          end
-         puts "-" * 80 + "\n"
+         puts "-" * 100 + "\n"
       end
       # output users deleted in this session.
       if @user_manager.deleted_users.any?
@@ -108,7 +108,7 @@ class Controller
          @user_manager.deleted_users.each do |user|
             puts "#{user}\n\n"
          end
-         puts "-" * 80 + "\n"
+         puts "-" * 100 + "\n"
       end
       sleep 1
       exit!

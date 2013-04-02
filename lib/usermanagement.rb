@@ -63,7 +63,7 @@ class UserManagement
       default_pass = "changeme456"
       system("clear")
       puts "\n\nCreate A User\n\n"
-      puts "*" * 80
+      puts "*" * 100
       puts "\n\n"
 
       print "Enter the new user's first name: "
@@ -111,7 +111,7 @@ class UserManagement
    def delete_user
       system("clear")
       puts "\n\nDelete A User\n\n"
-      puts "*" * 80
+      puts "*" * 100
       puts "\n\n"
       # Get the user to delete.
       print "Enter the username of the user you'd like to delete: "
@@ -164,7 +164,7 @@ class UserManagement
    def get_info
       system("clear")
       puts "\n\nRetrieve User Info\n\n"
-      puts "*" * 80
+      puts "*" * 100
       puts "\n\n"
       print "Enter the username you want to retrieve info for: "
       username=gets.chomp.downcase.strip
@@ -204,7 +204,7 @@ class UserManagement
    # Feel free to comment out any of the lines for info you don't need.
    # For instance, I have zero use for 'ip_whitelisted' and 'quota'.
    def output_user_table(retrieved_user,retrieved_nics=nil,retrieved_groups=nil)
-      puts "*" * 80
+      puts "*" * 100
       puts "Info for username --#{retrieved_user.username}--\n\n"
       puts "First and last name:".ljust(40) + "#{retrieved_user.given_name} #{retrieved_user.family_name}\n".ljust(40)
       
@@ -263,30 +263,42 @@ class UserManagement
       case a_b
       when "a"
          num = 1
-         line_toggler = 0
+         line_toggler = 1
          puts 
-         puts "*" * 80
+         puts "*" * 100
          puts "\nUsernames for this domain:\n\n"
          @fulluserlist.each do |user|
-            case line_toggler.even?
-            when true 
-               print "#{num}. #{user.username}".ljust(40)
+
+            # case line_toggler.even?
+            # when true 
+            #    print "#{num}. #{user.username}".ljust(40)
+            #    num += 1
+            #    line_toggler += 1
+            # when false
+            #    puts "#{num}. #{user.username}".ljust(40)
+            #    num += 1
+            #    line_toggler += 1
+            # end
+            if line_toggler % 4 == 0
+               puts "#{num}. #{user.username}".ljust(25)
                num += 1
-               line_toggler += 1
-            when false
-               puts "#{num}. #{user.username}".ljust(40)
+               line_toggler += 1 
+            else
+               print "#{num}. #{user.username}".ljust(25)
                num += 1
                line_toggler += 1
             end
+
+
          end
          puts "\n"
-         puts "*" * 80
+         puts "*" * 100
       when "b"
          puts
          @fulluserlist.each do |user|
             output_user_table(user)
          end
-         puts "*" * 80
+         puts "*" * 100
       end
    end
 
@@ -294,7 +306,7 @@ class UserManagement
       if !@fulluserlist
          system("clear")
          puts "\n\nList All Users\n\n"
-         puts "*" * 80
+         puts "*" * 100
          puts "\n\n"
          puts "Retreiving all users for a domain can take a long time depending on "
          puts "the number of users but only needs to be retrieved once per session."
