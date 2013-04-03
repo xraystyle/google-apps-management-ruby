@@ -7,6 +7,8 @@ class GroupManagement
 
 	def initialize
 		@controller = Controller.current_controller
+        @created_groups = []
+        @deleted_groups =[]
 	end
 
 
@@ -38,10 +40,20 @@ class GroupManagement
     end
 
 
+    def action_header(action)
+
+        system("clear")
+        puts "\n\n#{action}\n\n"
+        puts "*" * 100
+        puts "\n\n"
+        
+    end
+
+
     def group_action(action)
         case action
         when "a"
-           
+           create_group
         # when "b"
         #    delete_user
         # when "c"
@@ -89,17 +101,102 @@ class GroupManagement
 
 
     def create_group
+
         @controller.check_timeout
         # create a group
         # usage: @controller.session.create_group(group_id, properties)
         group_data = {}
+        action_header("Create A Group")
+
+        # Build the group data.
+        puts "Choose an ID for the new group. The ID will be the email address of the group."
+        puts "Example: <group-id>@domain.com"
+        print "Enter the ID of the new group: "
+        group_id = gets.chomp.strip.downcase
+        print "Enter a name for the group: "
+        group_data[:group_name] = gets.chomp.strip.downcase
+        print "Enter a short description for the group: "
+        group_data[:group_desc] = gets.chomp.strip.downcase
+        puts
+        puts "Who should be able to post to this group?"
+        puts "A. Owners of the group only."
+        puts "B. Members of the group only."
+        puts "C. Any user who belongs to the same domain as the group."
+        puts "D. Anyone."
+        print "> "
+        response = gets.chomp.strip.downcase
+        options = ["a","b","c","d"]
+        # check for valid input.
+        while !options.include?(response)
+            puts 'Try again. ("A", "B", "C", or "D")'
+            response = gets.chomp.strip.downcase
+        end
+        sleep 1
+        case response
+        when "a"
+            group_data[:email_priv] = "Owner"
+        when "b"
+            group_data[:email_priv] = "Member"
+        when "c"
+            group_data[:email_priv] = "Domain"
+        when "d"
+            group_data[:email_priv] = "Anyone"
+        end
+
+
+        # Idiot-check data with the user.
+        action_header("Create A Group")
+
+        puts "A new group will be created with the information below:\n\n"
+        puts "Group ID: #{group_id}\n"
+        puts "Group Name: #{group_data[:group_name]}\n"
+        puts "Group Description:\n#{group_data[:group_desc]}\n"
+        print "Who can post to this group: "
         
-        system("clear")
-        puts "\n\nCreate A User\n\n"
-        puts "*" * 100
-        puts "\n\n"
+        case group_data[:email_priv]
+        when "Owner"
+            puts "Group Owners Only"
+        when "Member"
+            puts "Group Members Only"
+        when "Domain"
+            puts "All Members Of This Domain"
+        when "Anyone"
+            puts "Anyone"
+        end
+
+        puts "\nIs this information correct? Enter \"yes\" to create the group, or \"no\" to cancel."
+        response = gets.chomp.strip.downcase
+
+        options = ["y","yes","n","no"]
+        while !options.include?(response)
+            puts 'Try again, "yes" to create, "no" to cancel.'
+            response = gets.chomp.strip.downcase
+        end
+
+        case response
+        when "n", "no"
+            puts "Group creation cancelled."
+            sleep 3
+            group_prompt            
+        when "y", "yes"
+            begin
+                @controller.session.create_group(group_id, group_data.values)
+            rescue GDataError => e
+                puts "Group creation failed."
+                puts "Reason: #{e.reason}"
+                group_prompt
+            end
+            puts "Group created successfully."
+            sleep 3
+            group_prompt
+        end
         
     end
+
+
+
+
+
 
     def update_group
         

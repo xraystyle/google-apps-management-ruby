@@ -405,7 +405,7 @@ module GAppsProvisioning #:nodoc:
 		# 	ex : 	
 		#		myapps = ProvisioningApi.new('root@mydomain.com','PaSsWoRd')
 		#		group= myapps.create_group("mygroup", ["My Group name", "My Group description", "<emailPermission>"])
-		# 
+		#--------------------------
 		# Below is the documentation for the third item in the array, the nebulous "<emailPermission>". I had 
 		# to dig it out of the GData API docs, it's not documented anywhere else.
 		#
@@ -417,7 +417,7 @@ module GAppsProvisioning #:nodoc:
 		#
 		# When using the API to create a group with these, you end up with a group that has custom permissions
 		# for some reason, even though the custom permissions seem to be the same as what the standard choices
-		# offer through the GUI.
+		# offer through the GUI.  --xraystyle
 		def create_group(group_id, properties)
 			msg = RequestMessage.new
 			msg.about_group(group_id, properties)
