@@ -20,7 +20,7 @@ class GroupManagement
         @controller.print_header("Group Management")
         puts "Options:\n"
         puts "A. Create a group."
-        puts "B. "
+        puts "B. Delete a group."
         puts "C. "
         puts "D. List all groups."
         puts
@@ -54,8 +54,8 @@ class GroupManagement
         case action
         when "a"
            create_group
-        # when "b"
-        #    delete_user
+        when "b"
+           delete_group
         # when "c"
         #    get_info
         when "d"
@@ -185,6 +185,7 @@ class GroupManagement
         when "y", "yes"
             begin
                 @controller.session.create_group(group_id, group_data.values)
+                @created_groups << group_id
             rescue GDataError => e
                 puts "Group creation failed."
                 puts "Reason: #{e.reason}"
@@ -210,9 +211,32 @@ class GroupManagement
     end
 
     def delete_group
-        
+        group_ids =[]
+        groups = @controller.session.retrieve_all_groups
+        groups.each { |group| group_ids << group.group_id  }
+
         # delete group
         # usage: @controller.session.delete_group(group_id)
+        action_header("Delete A Group")
+        print "Enter the email address of the group you'd like to delete: "
+        response = gets.chomp.strip.downcase
+
+        if group_ids.include?(response)
+            begin
+                @controller.session.delete_group(response)
+                @deleted_groups << response
+            rescue GDataError => e
+                puts "Group deletion failed."
+                puts "Reason: #{e.reason}"
+            end
+        else
+            puts "Group \"#{response}\" not found. Try again."
+            sleep 2
+            group_prompt
+        end
+
+        puts "Group \"#{response}\" deleted successfully."
+        group_prompt
 
     end
 
