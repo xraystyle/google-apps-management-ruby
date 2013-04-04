@@ -71,22 +71,26 @@ class GroupManagement
 
     def list_all_groups
         @controller.check_timeout
+        system("clear")
     	group_list = @controller.session.retrieve_all_groups
         num = 1
         line_toggler = 0
         puts "*" * 100
         puts "\nGroups in this domain:\n\n"
-
-        group_list.each do |group|
-            case line_toggler.even?
-            when true
-                print "#{num}. #{group.group_id}".ljust(40)
-                num += 1
-                line_toggler += 1
-            when false
-                puts "#{num}. #{group.group_id}".ljust(40)
-                num += 1
-                line_toggler += 1
+        if group_list == []
+            puts "There are currently no groups in this domain."
+        else
+            group_list.each do |group|
+                case line_toggler.even?
+                when true
+                    print "#{num}. #{group.group_id}".ljust(40)
+                    num += 1
+                    line_toggler += 1
+                when false
+                    puts "#{num}. #{group.group_id}".ljust(40)
+                    num += 1
+                    line_toggler += 1
+                end
             end
         end
         puts
@@ -109,14 +113,14 @@ class GroupManagement
         action_header("Create A Group")
 
         # Build the group data.
-        puts "Choose an ID for the new group. The ID will be the email address of the group."
-        puts "Example: <group-id>@domain.com"
-        print "Enter the ID of the new group: "
+        puts "Choose an email address for the group. The domain must be managed by this Google Apps account."
+        puts "Example: \"group@my-domain.com\""
+        print "Enter the email address of the new group: "
         group_id = gets.chomp.strip.downcase
         print "Enter a name for the group: "
-        group_data[:group_name] = gets.chomp.strip.downcase
+        group_data[:group_name] = gets.chomp.strip
         print "Enter a short description for the group: "
-        group_data[:group_desc] = gets.chomp.strip.downcase
+        group_data[:group_desc] = gets.chomp.strip
         puts
         puts "Who should be able to post to this group?"
         puts "A. Owners of the group only."
