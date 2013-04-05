@@ -9,7 +9,16 @@ class GroupManagement
 		@controller = Controller.current_controller
         @created_groups = []
         @deleted_groups =[]
-	end
+        @group_ids =[]
+        refresh_groups
+    end
+
+
+    def refresh_groups
+        @group_list = @controller.session.retrieve_all_groups
+        @group_list.each { |group| @group_ids << group.group_id  }  
+    end
+
 
 
     def group_prompt
@@ -21,7 +30,7 @@ class GroupManagement
         puts "Options:\n"
         puts "A. Create a group."
         puts "B. Delete a group."
-        puts "C. "
+        puts "C. Add users to a group."
         puts "D. List all groups."
         puts
         puts "To go back to the main menu, type \"Menu\""
@@ -56,8 +65,8 @@ class GroupManagement
            create_group
         when "b"
            delete_group
-        # when "c"
-        #    get_info
+        when "c"
+           add_member_to_group
         when "d"
            list_all_groups
         when "menu"
@@ -72,15 +81,14 @@ class GroupManagement
     def list_all_groups
         @controller.check_timeout
         system("clear")
-    	group_list = @controller.session.retrieve_all_groups
         num = 1
         line_toggler = 0
         puts "*" * 100
         puts "\nGroups in this domain:\n\n"
-        if group_list == []
+        if @group_list == []
             puts "There are currently no groups in this domain."
         else
-            group_list.each do |group|
+            @group_list.each do |group|
                 case line_toggler.even?
                 when true
                     print "#{num}. #{group.group_id}".ljust(40)
@@ -106,7 +114,6 @@ class GroupManagement
 
     def create_group
 
-        @controller.check_timeout
         # create a group
         # usage: @controller.session.create_group(group_id, properties)
         group_data = {}
@@ -169,6 +176,7 @@ class GroupManagement
         end
 
         puts "\nIs this information correct? Enter \"yes\" to create the group, or \"no\" to cancel."
+        print "> "
         response = gets.chomp.strip.downcase
 
         options = ["y","yes","n","no"]
@@ -184,21 +192,21 @@ class GroupManagement
             group_prompt            
         when "y", "yes"
             begin
+                @controller.check_timeout
                 @controller.session.create_group(group_id, group_data.values)
                 @created_groups << group_id
+                refresh_groups
             rescue GDataError => e
                 puts "Group creation failed."
                 puts "Reason: #{e.reason}"
                 group_prompt
             end
             puts "Group created successfully."
-            sleep 3
+            puts "Press \"enter\" to continue..."
             group_prompt
         end
         
     end
-
-
 
 
 
@@ -211,9 +219,7 @@ class GroupManagement
     end
 
     def delete_group
-        group_ids =[]
-        groups = @controller.session.retrieve_all_groups
-        groups.each { |group| group_ids << group.group_id  }
+        
 
         # delete group
         # usage: @controller.session.delete_group(group_id)
@@ -221,10 +227,12 @@ class GroupManagement
         print "Enter the email address of the group you'd like to delete: "
         response = gets.chomp.strip.downcase
 
-        if group_ids.include?(response)
+        if @group_ids.include?(response)
             begin
+                @controller.check_timeout
                 @controller.session.delete_group(response)
                 @deleted_groups << response
+                refresh_groups
             rescue GDataError => e
                 puts "Group deletion failed."
                 puts "Reason: #{e.reason}"
@@ -236,6 +244,8 @@ class GroupManagement
         end
 
         puts "Group \"#{response}\" deleted successfully."
+        puts "Press \"enter\" to continue..."
+        gets
         group_prompt
 
     end
@@ -245,7 +255,56 @@ class GroupManagement
 
         # add member to a group
         # usage: @controller.session.add_member_to_group(email_address, group_id)
+        action_header("Add User To A Group")
+        print "Enter the name of the group you'd like to add users to: "
+        the_group = gets.chomp.strip.downcase
+        puts "Enter the names of the users you'd like to add to the group, separated by commas."
+        puts "Ex: \"maude, jeff, walter, donny\""
+        print "> "
+        userlist = gets.chomp.strip.downcase
+        the_users = userlist.gsub(" ","").split(",")
+        sleep 1
+
+        action_header("Add User To A Group")
+        puts "The following users will be added to \"#{the_group}\"."
         
+        the_users.each do |user| 
+            puts "\"#{user}\""
+        end
+
+        puts "Is this correct?(y/n)"
+        print "> "
+        y_n = gets.chomp.strip.downcase
+
+        case y_n
+        when "y", "yes"
+            @controller.check_timeout
+            begin
+                the_users.each do |user|
+                    @controller.session.add_member_to_group(user, the_group)
+                end
+            rescue GDataError => e
+                puts "Adding user to group failed."
+                puts "Reason: #{e.reason}. Please try again."
+                sleep 3
+                group_prompt
+            end
+
+        when "n", "no"
+            puts "Group addition cancelled."
+            sleep 3
+            group_prompt
+        end
+
+        puts "The following users were successfully added to \"#{the_group}\"."
+
+        the_users.each do |user| 
+            puts "\"#{user}\""
+        end
+
+        print "Press \"enter\" to continue..."
+        gets
+        group_prompt        
     end
 
 
@@ -264,7 +323,6 @@ class GroupManagement
 
 
 end
-
 
 
 
