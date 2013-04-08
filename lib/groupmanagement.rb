@@ -24,14 +24,16 @@ class GroupManagement
     def group_prompt
 
         $stdout.sync = true
-        options = ["a","b","c","d","menu","exit","quit"]
+        options = ["a","b","c","d","e","f","menu","exit","quit"]
         system "clear"
         @controller.print_header("Group Management")
         puts "Options:\n"
         puts "A. Create a group."
         puts "B. Delete a group."
         puts "C. Add users to a group."
-        puts "D. List all groups."
+        puts "D. Remove users from a group."
+        puts "E. Get info about a group."
+        puts "F. List all groups."
         puts
         puts "To go back to the main menu, type \"Menu\""
         puts "To exit, type \"quit\", or \"exit\""
@@ -39,7 +41,7 @@ class GroupManagement
         response = gets.chomp.downcase.strip
       
         while !options.include?(response)
-            puts 'Try again. ("A"", "B", "C", "D" or "Menu")'
+            puts 'Try again. ("A"", "B", "C", "D", "E", "F" or "Menu")'
             print "> "
             response = gets.chomp.downcase.strip
         end
@@ -68,7 +70,11 @@ class GroupManagement
         when "c"
            add_member_to_group
         when "d"
-           list_all_groups
+           remove_member_from_group
+        when "e"
+            get_info
+        when "f"
+            list_all_groups
         when "menu"
             system 'clear'
             @controller.prompt
@@ -213,8 +219,14 @@ class GroupManagement
 
     def update_group
         
+        # I don't think I've ever needed to modify a group. I'm
+        # not going to implement this method at this time because 
+        # I'd likely never use it.
+        # --xraystyle
+
         # update group attributes
         # usage: @controller.session.update_group(group_id, properties)
+
 
     end
 
@@ -272,6 +284,7 @@ class GroupManagement
             puts "\"#{user}\""
         end
 
+        puts
         puts "Is this correct?(y/n)"
         print "> "
         y_n = gets.chomp.strip.downcase
@@ -296,6 +309,7 @@ class GroupManagement
             group_prompt
         end
 
+        action_header("Add User To A Group")
         puts "The following users were successfully added to \"#{the_group}\"."
 
         the_users.each do |user| 
@@ -311,9 +325,108 @@ class GroupManagement
     def remove_member_from_group
 
         # usage: @controller.session.remove_member_from_group(email_address, group_id)
+        action_header("Remove User From A Group")
+        print "Enter the name of the group you'd like to remove users from: "
+        the_group = gets.chomp.strip.downcase
+        puts "Enter the names of the users you'd like to remove, separated by commas."
+        puts "Ex: \"maude, jeff, walter, donny\""
+        print "> "
+        userlist = gets.chomp.strip.downcase
+        the_users = userlist.gsub(" ","").split(",")
+        sleep 1
+
+        action_header("Remove User From A Group")
+        puts "The following users will be removed from \"#{the_group}\"."
         
+        the_users.each do |user| 
+            puts "\"#{user}\""
+        end
+
+        puts "Is this correct?(y/n)"
+        print "> "
+        y_n = gets.chomp.strip.downcase
+
+        case y_n
+        when "y", "yes"
+            @controller.check_timeout
+            begin
+                the_users.each do |user|
+                    @controller.session.remove_member_from_group(user, the_group)
+                end
+            rescue GDataError => e
+                puts "Removing user from group failed."
+                puts "Reason: #{e.reason}. Please try again."
+                sleep 3
+                group_prompt
+            end
+
+        when "n", "no"
+            puts "Group modification cancelled."
+            sleep 3
+            group_prompt
+        end
+
+        puts "The following users were successfully removed from \"#{the_group}\"."
+
+        the_users.each do |user| 
+            puts "\"#{user}\""
+        end
+
+        print "Press \"enter\" to continue..."
+        gets
+        group_prompt
+
     end
 
+    def get_info
+
+        # usage: @controller.session.retrieve_all_members(group_id)
+        action_header("Get Group Info")
+        print "Enter the name of the group you'd like info about: "
+        the_group = gets.chomp.strip.downcase
+
+        begin
+            @controller.check_timeout
+            memberlist = @controller.session.retrieve_all_members(the_group)
+            ownerlist = @controller.session.retrieve_all_owners(the_group)
+        rescue GDataError => e
+            puts "Group info retrieval failed."
+            puts "Reason: #{e.reason}"
+            puts "Press enter to continue..."
+            gets
+            group_prompt
+        end
+
+        action_header("Get Group Info")
+        puts "Info for #{the_group}"
+        puts 
+        puts "Users in this group:"
+
+        if memberlist.any?
+            memberlist.each do |member| 
+                puts "\"#{member.member_id}\""
+            end
+        else 
+            puts "There are currently no users in this group.\n"
+        end
+
+        puts
+        puts "Group Owners:"
+
+        if ownerlist.any?
+            ownerlist.each do |owner|
+                puts "\"#{owner.owner_id}\""
+            end
+        else
+            puts "This group currently has no owners.\n\n"
+        end
+
+        puts "Press enter to continue..."
+
+        gets
+        group_prompt
+
+    end
 
 
 
