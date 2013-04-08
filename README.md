@@ -23,10 +23,8 @@ and I don't plan to. Let ne know if you do.
 
 3.	I also had to install the curl-ca-bundle in order for SSL to function. Additionally, I had to point the app at the path to the cert store for it to be recognized. I installed the bundle via
 Macports (`sudo port install curl-ca-bundle`), but you can grab it via homebrew or manually, I'm sure. Once installed, make sure line 33 of gappsprovisioning/connection.rb points to the correct 
-path to the cert store. It's currently set for the default install path using Macports.
-
-If you'd like to try to get it up and running by tweaking environment variables, have a look at this link: http://mentalized.net/journal/2012/08/10/ssl_certificate_woes_with_ruby_19_and_os_x/
-
+path to the cert store. It's currently set for the default install path using Macports. If you'd like to try to get it up and running by tweaking environment variables, have a look at this 
+link: http://mentalized.net/journal/2012/08/10/ssl_certificate_woes_with_ruby_19_and_os_x/
 
 4.	When creating a user account, the user is assigned a default password. This password is set on line 63 of lib/usermanagement.rb. You can set it to whatever you'd like.
 
