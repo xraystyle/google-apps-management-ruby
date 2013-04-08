@@ -8,9 +8,9 @@ The app uses the Google Apps provisioning API Ruby client found here: http://cod
 This app also makes use of the Highline gem for more advanced control over user input. 
 More info on that here: http://highline.rubyforge.org/
 
-Currently the app can list user info given a username, and add and delete users from the domain. The app can also list all the users in the domain, either just by username, or by full user info.
+Currently the app can manage user accounts and groups within the domains in your Google Apps account.
 
-The plan is that this app will eventually be able to send welcome emails to newly added users and be able to manage group membership as well.
+The plan is that this app will eventually be able to easily onboard new users with appropriate group membership, aliases, send out welcome emails, etc.
 
 
 USAGE NOTES:
