@@ -108,7 +108,7 @@ class Controller
       
       if @group_manager.created_groups.any?
          puts "Created Groups:\n\n"
-         @user_manager.created_groups.each do |group_id|
+         @group_manager.created_groups.each do |group_id|
             puts "#{group_id}\n\n"
          end
          puts "-" * 100 + "\n"
@@ -125,7 +125,7 @@ class Controller
 
       if @group_manager.deleted_groups.any?
          puts "Deleted Groups:\n\n"
-         @user_manager.deleted_groups.each do |group_id|
+         @group_manager.deleted_groups.each do |group_id|
             puts "#{group_id}\n\n"
          end
          puts "-" * 100 + "\n"
