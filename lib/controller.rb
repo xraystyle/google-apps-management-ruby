@@ -95,7 +95,9 @@ class Controller
       puts "\n\n"
       puts "*" * 100
       puts "\n\n"
-      # output users created in this session.
+
+      # output users and groups created in this session.
+
       if @user_manager.created_users.any?
          puts "Created Users:\n\n"
          @user_manager.created_users.each do |user|
@@ -103,7 +105,16 @@ class Controller
          end
          puts "-" * 100 + "\n"
       end
-      # output users deleted in this session.
+      
+      if @group_manager.created_groups.any?
+         puts "Created Groups:\n\n"
+         @user_manager.created_groups.each do |group_id|
+            puts "#{group_id}\n\n"
+         end
+         puts "-" * 100 + "\n"
+      end
+      
+      # output users and groups deleted in this session.
       if @user_manager.deleted_users.any?
          puts "Deleted Users:\n\n"
          @user_manager.deleted_users.each do |user|
@@ -111,6 +122,15 @@ class Controller
          end
          puts "-" * 100 + "\n"
       end
+
+      if @group_manager.deleted_groups.any?
+         puts "Deleted Groups:\n\n"
+         @user_manager.deleted_groups.each do |group_id|
+            puts "#{group_id}\n\n"
+         end
+         puts "-" * 100 + "\n"
+      end
+
       sleep 1
       exit!
    end

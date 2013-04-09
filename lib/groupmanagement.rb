@@ -5,6 +5,8 @@
 
 class GroupManagement
 
+    attr_accessor :created_groups, :deleted_groups
+
 	def initialize
 		@controller = Controller.current_controller
         @created_groups = []
