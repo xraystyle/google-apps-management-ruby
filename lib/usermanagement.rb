@@ -62,11 +62,11 @@ class UserManagement
 
 
    #create a user
-   def create_user(usersetup = nil)
+   def create_user(usersetup=false)
    
+      user_data = {}
+      default_pass = "changeme456"
       unless usersetup
-         user_data = {}
-         default_pass = "changeme456"
          system("clear")
          puts "\n\nCreate A User\n\n"
          puts "*" * 100
@@ -188,13 +188,19 @@ class UserManagement
    end
    
    #get user info
-   def get_info
-      system("clear")
-      puts "\n\nRetrieve User Info\n\n"
-      puts "*" * 100
-      puts "\n\n"
-      print "Enter the username you want to retrieve info for: "
-      username=gets.chomp.downcase.strip
+   def get_info(passed_name=nil)
+      
+      if passed_name
+         username = passed_name
+      else
+         system("clear")
+         puts "\n\nRetrieve User Info\n\n"
+         puts "*" * 100
+         puts "\n\n"
+         print "Enter the username you want to retrieve info for: "
+         username=gets.chomp.downcase.strip  
+      end
+
 
       @controller.check_timeout
       # template: retrieve_user(username)
@@ -218,7 +224,11 @@ class UserManagement
          puts "\n\nPress enter to continue..."
          gets
          system("clear")
-         user_prompt
+         if passed_name
+            @controller.prompt
+         else
+            user_prompt
+         end
       end
    end
    

@@ -51,27 +51,30 @@ class UserSetup
 	def confirm_data
 
 		@controller.print_header("Complete User Setup")
-		puts "A new user will be created with the following information:"
+		puts "A new user will be created with the following information:\n"
 
-		puts "First and last name: #{@userdata[:fname]} #{@userdata[:lname]}\n"
+		puts "First and last name: #{@userdata[:fname]} #{@userdata[:lname]}\n\n"
 		print "Email aliases: "
 		
 		@alias_list.each do |e|
-			print "#{e}, "
+			print "#{e} "
 		end
+		puts
 
 		puts
 		print "The new user will be added to the following groups: "
 
 		@group_numbers.each do |number|
-			print "#{@all_groups[number - 1]}, "
+			print "#{@all_groups[number.to_i - 1]} "
 		end
+		puts
+		puts
 
 		
 	end
 
 	def rockandroll!
-
+		default_pass = 'changeme456'
 		@all_groups = @controller.group_manager.refresh_groups
 		basic_user_data
 		get_aliases
@@ -85,13 +88,38 @@ class UserSetup
 		case response
 		when "y","yes"
 			# make the user, add aliases to user, add user to groups.
+			@controller.check_timeout
+		    begin
+		        # Create the user account
+		        @controller.session.create_user(@userdata[:uname], @userdata[:fname], @userdata[:lname], default_pass)
+		        @controller.user_manager.created_users << @userdata
+		        # Set up aliases
+		        @alias_list.each do |a|
+		        	@controller.session.create_nickname(@userdata[:uname],a)
+		        end
+
+		        # Add user to groups
+		        @group_numbers.each do |number|
+		        	@controller.session.add_member_to_group(@userdata[:uname],@all_groups[number.to_i - 1])
+		        end
+
+		    rescue GDataError => e
+		        puts "Uh oh, something went wrong. Check if the user was created, then try again."
+		        puts "errorcode = " +e.code, "input : "+e.input, "reason : "+e.reason
+		        @controller.prompt
+		    end
 		when "n","no"
 			# pop smoke and break contact. Back to main menu.
+			puts "User setup cancelled."
+			sleep 2
+			@controller.prompt
 		end
 
 		# report successfull creation of user
-		# press enter to continue, then back to main menu.			
-
+		puts "User creation successful!"	
+		sleep 2
+		@controller.user_manager.get_info(@userdata[:uname])
+		@controller.prompt
 
 	end
 

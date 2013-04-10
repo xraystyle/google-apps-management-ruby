@@ -20,6 +20,7 @@ require 'login'
 require 'controller'
 require 'usermanagement'
 require 'groupmanagement'
+require 'usersetup'
 include GAppsProvisioning
 
 system "clear"

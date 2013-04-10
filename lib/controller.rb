@@ -26,6 +26,7 @@ class Controller
       @@current_controller = self
       @user_manager = UserManagement.new
       @group_manager = GroupManagement.new
+      @user_setup = UserSetup.new
    end
    
    def re_auth(username)
@@ -41,6 +42,7 @@ class Controller
    end
 
    def print_header(subsection=nil)
+      system("clear")
       puts "\n\n"
       puts "GApps User Provisioning".center(100)
       if subsection
@@ -56,18 +58,19 @@ class Controller
    def prompt
 
       $stdout.sync = true
-      options = ["a","b","quit","exit"]
+      options = ["a","b","c","quit","exit"]
       print_header
       puts "Options:\n"
       puts "A. User Management"
       puts "B. Group Management"
+      puts "C. New User Setup"
       puts
       puts "To exit, type \"quit\", or \"exit\""
       print "> " 
       response = gets.chomp.downcase.strip
       
       while !options.include?(response)
-         puts 'Try again. ("A"", "B", or "quit")'
+         puts 'Try again. ("A"", "B", "C" or "quit")'
          print "> "
          response = gets.chomp.downcase.strip
       end
@@ -82,6 +85,9 @@ class Controller
          @user_manager.user_prompt
       when "b"
          @group_manager.group_prompt
+      when "c"
+         system("clear")
+         @user_setup.rockandroll!
       when "quit", "exit"
          bail
       end
