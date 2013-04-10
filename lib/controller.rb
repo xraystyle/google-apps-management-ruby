@@ -63,7 +63,7 @@ class Controller
       puts "Options:\n"
       puts "A. User Management"
       puts "B. Group Management"
-      puts "C. New User Setup"
+      puts "C. Complete User Setup"
       puts
       puts "To exit, type \"quit\", or \"exit\""
       print "> " 

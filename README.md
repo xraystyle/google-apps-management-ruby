@@ -33,6 +33,10 @@ link: http://mentalized.net/journal/2012/08/10/ssl_certificate_woes_with_ruby_19
 CHANGELOG
 ------------
 
+4/10/13: Complete User Setup has been implemented!  
+The main menu now has an option for Complete User Setup. This option allows you to create a new user account, add email aliases to it and add the user to any groups in the domain in a single workflow. Last to do is set up sending of welcome
+emails to the new user. Maybe later in the week.
+
 4/8/13: I CAN HAS COMMITS! Group management is up and working. App has the ability to list groups, get group info, create and delete groups as well as add and remove users. All functionality is 
 tested working but could probably use some more cleanup/error-checking here and there.
 
