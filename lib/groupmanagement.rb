@@ -18,7 +18,8 @@ class GroupManagement
 
     def refresh_groups
         @group_list = @controller.session.retrieve_all_groups
-        @group_list.each { |group| @group_ids << group.group_id  }  
+        @group_list.each { |group| @group_ids << group.group_id  }
+        return @group_ids  
     end
 
 
@@ -86,7 +87,8 @@ class GroupManagement
     end
 
 
-    def list_all_groups
+    def list_all_groups(usersetup?=false)
+
         @controller.check_timeout
         system("clear")
         num = 1
@@ -112,9 +114,15 @@ class GroupManagement
         puts
         puts "*" * 100
         puts
-        puts "Press enter to continue..."
-    	gets
-    	group_prompt
+
+        unless usersetup?
+           
+            puts "Press enter to continue..."
+            gets
+            group_prompt
+                    
+        end
+
 
     end
 
@@ -265,7 +273,13 @@ class GroupManagement
     end
 
     
-    def add_member_to_group
+    def add_member_to_group(userID=nil,groupID=nil)
+
+        # quick add when passed vars from elsewhere.
+        if userID && groupID
+            @controller.check_timeout
+            @controller.session.add_member_to_group(userID, groupID)
+        end
 
         # add member to a group
         # usage: @controller.session.add_member_to_group(email_address, group_id)

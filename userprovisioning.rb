@@ -8,8 +8,10 @@
 APP_ROOT= File.dirname(__FILE__)
 
 $:.unshift(File.join(APP_ROOT, 'lib'))
+$:.unshift(File.join(APP_ROOT, 'lib', 'core_ext'))
 $:.unshift(File.join(APP_ROOT, 'gappsprovisioning'))
 
+require 'to_hash'
 require 'rubygems'
 require 'highline/import'
 require 'provisioningapi'

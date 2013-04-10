@@ -62,12 +62,16 @@ class UserManagement
 
 
    #create a user
-   def create_user
-      user_data = {}
-      default_pass = "changeme456"
-      system("clear")
-      puts "\n\nCreate A User\n\n"
-      puts "*" * 100
+   def create_user(usersetup?=false)
+   
+      unless usersetup?
+         user_data = {}
+         default_pass = "changeme456"
+         system("clear")
+         puts "\n\nCreate A User\n\n"
+         puts "*" * 100
+      end
+
       puts "\n\n"
 
       print "Enter the new user's first name: "
@@ -81,7 +85,14 @@ class UserManagement
       
       puts "\nThe user will be assigned the default password of #{default_pass}"
       puts "and it must be changed on their first login.\n"
-      
+
+      # just return the userdata and break if called from usersetup class.
+      if usersetup?
+         sleep 2
+         @created_users << user_data
+         return user_data
+      end
+
       # You can specify your preferred default password using the 'default_pass' 
       # variable assignment at the beginning of this method definition. It's currently
       # set to 'changeme456'. The ability to specify a password was not implemented due
@@ -98,6 +109,8 @@ class UserManagement
          user_prompt
       end
       
+
+      
       @created_users << user_data
       puts "\nUser created successfully:\n"
       puts "#{user_data[:fname].capitalize} #{user_data[:lname].capitalize}\nUsername: #{user_data[:uname]}\n"
@@ -107,6 +120,23 @@ class UserManagement
       user_prompt
    end
    
+   # add an email alias. 
+   def add_alias(user,email_alias)
+
+      @controller.check_timeout
+
+      begin
+         @controller.session.create_nickname(user,email_alias)
+      rescue GDataError => e
+         puts "Error adding email alias."
+         puts "Reason: #{e.reason}"
+      end
+
+    
+      
+   end
+
+
    #delete a user
    def delete_user
       system("clear")

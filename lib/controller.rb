@@ -5,7 +5,7 @@
 
 class Controller
 
-   attr_accessor :session, :username
+   attr_accessor :session, :username, :user_manager, :group_manager
 
 ####### Class Variables/Class Methods #######
    @@current_controller = nil
