@@ -62,9 +62,9 @@ class UserManagement
 
 
    #create a user
-   def create_user(usersetup?=false)
+   def create_user(usersetup = nil)
    
-      unless usersetup?
+      unless usersetup
          user_data = {}
          default_pass = "changeme456"
          system("clear")
@@ -87,7 +87,7 @@ class UserManagement
       puts "and it must be changed on their first login.\n"
 
       # just return the userdata and break if called from usersetup class.
-      if usersetup?
+      if usersetup
          sleep 2
          @created_users << user_data
          return user_data

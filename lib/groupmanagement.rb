@@ -87,7 +87,7 @@ class GroupManagement
     end
 
 
-    def list_all_groups(usersetup?=false)
+    def list_all_groups(usersetup=false)
 
         @controller.check_timeout
         system("clear")
@@ -115,7 +115,7 @@ class GroupManagement
         puts "*" * 100
         puts
 
-        unless usersetup?
+        unless usersetup
            
             puts "Press enter to continue..."
             gets

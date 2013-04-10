@@ -72,7 +72,7 @@ class UserSetup
 
 	def rockandroll!
 
-		@all_groups = @controller.group_manager.refresh_groups.to_hash # see lib/core_ext/to_hash for details.
+		@all_groups = @controller.group_manager.refresh_groups
 		basic_user_data
 		get_aliases
 		get_groups
