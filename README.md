@@ -17,7 +17,7 @@ USAGE NOTES:
 -------------
 
 1.	Tested working on a Mac, using both system ruby (1.8.7) and 2.0.0 installed via RVM. Code is untested on Linux, but I see no reason why it shouldn't work. I've never tested it on Windows
-and I don't plan to. Let ne know if you do.
+and I don't plan to. Let me know if you do.
 
 2.	You'll need the Ruby 'Highline' gem. `$: gem install highline`
 
