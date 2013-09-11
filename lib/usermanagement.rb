@@ -89,7 +89,6 @@ class UserManagement
       # just return the userdata and break if called from usersetup class.
       if usersetup
          sleep 2
-         @created_users << user_data
          return user_data
       end
 
