@@ -83,7 +83,11 @@ class UserSetup
 
 		puts
 		puts "Is this information correct? Enter \"y\" to proceed with user creation, \"n\" to cancel \nand return to the main menu."
+		puts
+		print "> "
 		response = gets.chomp.strip.downcase
+		system "clear"
+
 
 		case response
 		when "y","yes"
@@ -116,11 +120,18 @@ class UserSetup
 		end
 
 		# report successfull creation of user
-		puts "User creation successful!"	
+		puts "User creation successful!\n\n"	
 		sleep 2
 		@controller.user_manager.get_info(@userdata[:uname])
+		puts "Press enter to continue..."
+		gets
 		@controller.prompt
-
+		# puts "\nUser created successfully:\n"
+	 	#puts "#{user_data[:fname].titleize} #{user_data[:lname].titleize}\nUsername: #{user_data[:uname]}\n"
+	 	#puts "Press enter to continue..."
+	 	#gets
+	 	#system("clear")
+	 	#user_prompt
 	end
 
 

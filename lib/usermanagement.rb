@@ -160,6 +160,8 @@ class UserManagement
          rescue GDataError => e
             puts "User deletion failed for user \"#{response}\"."
             puts "Reason : "+e.reason
+            puts "Press enter to continue..."
+            gets
             user_prompt
          end
 
