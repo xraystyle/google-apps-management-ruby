@@ -107,7 +107,7 @@ class Controller
       if @user_manager.created_users.any?
          puts "Created Users:\n\n"
          @user_manager.created_users.each do |user|
-            puts "#{user[:fname].capitalize} #{user[:lname].capitalize}\nUsername: #{user[:uname]}\n\n"
+            puts "#{user[:fname].titleize} #{user[:lname].titleize}\nUsername: #{user[:uname]}\n\n"
          end
          puts "-" * 100 + "\n"
       end

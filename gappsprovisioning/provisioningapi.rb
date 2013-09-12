@@ -216,6 +216,8 @@ module GAppsProvisioning #:nodoc:
 			msg.about_name(family_name, given_name)
 			msg.about_quota(quota.to_s) if quota
 			response  = request(:user_create,nil,@headers, msg.to_s)
+			# puts response
+			# gets
 			user_entry = UserEntry.new(response.elements["entry"])
 		end
 

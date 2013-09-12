@@ -75,10 +75,10 @@ class UserManagement
       puts "\n\n"
 
       print "Enter the new user's first name: "
-      user_data[:fname] = gets.chomp.strip.capitalize
+      user_data[:fname] = gets.chomp.strip.titleize
       
       print "Enter the new user's last name: "
-      user_data[:lname] = gets.chomp.strip.capitalize
+      user_data[:lname] = gets.chomp.strip.titleize
       
       print "Enter the new user's username: "
       user_data[:uname] = gets.chomp.strip.downcase
@@ -112,7 +112,7 @@ class UserManagement
       
       @created_users << user_data
       puts "\nUser created successfully:\n"
-      puts "#{user_data[:fname].capitalize} #{user_data[:lname].capitalize}\nUsername: #{user_data[:uname]}\n"
+      puts "#{user_data[:fname].titleize} #{user_data[:lname].titleize}\nUsername: #{user_data[:uname]}\n"
       puts "Press enter to continue..."
       gets
       system("clear")
