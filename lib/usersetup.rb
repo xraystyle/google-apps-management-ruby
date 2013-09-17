@@ -97,10 +97,14 @@ class UserSetup
 		        # Create the user account
 		        @controller.session.create_user(@userdata[:uname], @userdata[:fname], @userdata[:lname], default_pass)
 		        @controller.user_manager.created_users << @userdata
+		        puts "User created, setting up email aliases..."
+		        sleep 3
 		        # Set up aliases
 		        @alias_list.each do |a|
 		        	@controller.session.create_nickname(@userdata[:uname],a)
 		        end
+		        puts "Done, adding user to groups..."
+		        sleep 3
 
 		        # Add user to groups
 		        @group_numbers.each do |number|

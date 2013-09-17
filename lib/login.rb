@@ -43,6 +43,7 @@ class LogIn
       if user
          @username = user
       else
+         $stdout.sync = true
          print "Enter your GApps email address: "
          @username = gets.chomp.strip.downcase         
          # using highline for input on more than one run of a loop causes intermittent errors

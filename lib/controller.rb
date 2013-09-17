@@ -19,11 +19,11 @@ class Controller
 ############# Instance Methods ##############
 
    def initialize
+      @@current_controller = self
       print_header
       @auth = LogIn.new
       @session = @auth.gapps_session
       @username = @auth.username
-      @@current_controller = self
       @user_manager = UserManagement.new
       @group_manager = GroupManagement.new
       @user_setup = UserSetup.new
