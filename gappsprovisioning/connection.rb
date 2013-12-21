@@ -30,7 +30,7 @@ module GAppsProvisioning #:nodoc:
 			# using 'sudo port install curl-ca-bundle'. If you're using a different cert
 			# store you'll have to change this path to verify SSL. Don't be an asshole
 			# and turn off SSL verification. --xraystyle
-			conn.ca_file = '/opt/local/share/curl/curl-ca-bundle.crt'	
+			conn.ca_file = '/usr/local/opt/curl-ca-bundle/share/ca-bundle.crt'	
 			# conn.verify_mode = OpenSSL::SSL::VERIFY_NONE 
 			# uncomment the previous line at your own risk : the certificate won't be verified !
 			store = OpenSSL::X509::Store.new
