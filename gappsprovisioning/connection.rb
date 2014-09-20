@@ -26,8 +26,8 @@ module GAppsProvisioning #:nodoc:
 			#conn.enable_post_connection_check=  true
 			conn.verify_mode = OpenSSL::SSL::VERIFY_PEER
 			# The line below points the HTTP object to the cert store so SSL can be verified.
-			# In the example below, the cert store was installed on OS X with Macports
-			# using 'sudo port install curl-ca-bundle'. If you're using a different cert
+			# In the example below, the cert store was installed on OS X with Homebrew
+			# using 'brew install curl-ca-bundle'. If you're using a different cert
 			# store you'll have to change this path to verify SSL. Don't be an asshole
 			# and turn off SSL verification. --xraystyle
 			conn.ca_file = '/usr/local/opt/curl-ca-bundle/share/ca-bundle.crt'	
