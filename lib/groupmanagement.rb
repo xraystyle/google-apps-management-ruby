@@ -12,7 +12,7 @@ class GroupManagement
         @created_groups = []
         @deleted_groups =[]
         @group_ids =[]
-        refresh_groups
+        # refresh_groups
     end
 
 
@@ -90,6 +90,7 @@ class GroupManagement
     def list_all_groups(usersetup=false)
 
         @controller.check_timeout
+        refresh_groups
         system("clear")
         num = 1
         line_toggler = 0
@@ -177,7 +178,7 @@ class GroupManagement
         puts "A new group will be created with the information below:\n\n"
         puts "Group ID: #{group_id}\n"
         puts "Group Name: #{group_data[:group_name]}\n"
-        puts "Group Description:\n#{group_data[:group_desc]}\n"
+        puts "Group Description: #{group_data[:group_desc]}\n"
         print "Who can post to this group: "
         
         case group_data[:email_priv]
@@ -250,6 +251,29 @@ class GroupManagement
         response = gets.chomp.strip.downcase
 
         if @group_ids.include?(response)
+
+            # idiot check the deletion with the user.
+            action_header("Delete A Group")
+            puts "WARNING: Email group #{response} will be deleted."
+            puts "YOU CANNOT UNDO THIS. ARE YOU SURE? (yes/no)"
+            print "> "
+
+            confirm_delete = gets.chomp.strip.downcase
+
+            yesno = ["yes", "no"]
+
+            while !yesno.include?(confirm_delete)
+                puts "Enter 'yes' to continue or 'no' to cancel."
+                print "> "
+                confirm_delete = gets.chomp.strip.downcase
+            end                
+
+            if confirm_delete == "no"
+                puts "Group deletion cancelled."
+                sleep 1.5
+                group_prompt
+            end
+
             begin
                 @controller.check_timeout
                 @controller.session.delete_group(response)
