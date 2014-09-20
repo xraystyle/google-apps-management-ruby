@@ -269,8 +269,9 @@ class GroupManagement
             end                
 
             if confirm_delete == "no"
-                puts "Group deletion cancelled."
-                sleep 1.5
+                puts "\nGroup deletion cancelled. No changes have been made.\n"
+                puts "Press enter to continue..."
+                gets
                 group_prompt
             end
 

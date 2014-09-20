@@ -146,7 +146,8 @@ class UserManagement
       print "Enter the username of the user you'd like to delete: "
       response = gets.chomp.strip.downcase
       # Idiot check.
-      puts "\nUser #{response} will be deleted. This cannot be un-done, are you sure? (y/n)"
+      puts "\nWARNING: User #{response} will be deleted."
+      puts "YOU CANNOT UNDO THIS. ARE YOU SURE? (yes/no)"
       print "> "
       y_n = gets.chomp.strip.downcase
       
