@@ -26,7 +26,7 @@ $:.unshift(File.join(APP_ROOT, 'lib'))
 $:.unshift(File.join(APP_ROOT, 'lib', 'core_ext'))
 $:.unshift(File.join(APP_ROOT, 'gappsprovisioning'))
 
-require 'to_hash'
+# require 'to_hash'
 require 'titleize'
 require 'rubygems'
 require 'highline/import'
