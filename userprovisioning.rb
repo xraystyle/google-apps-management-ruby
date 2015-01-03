@@ -3,8 +3,6 @@
 # xraystyle's GApps User Provisioning Tool 
 # https://github.com/xraystyle/google-apps-management-ruby
 
-# trap("INT") { puts "#{Controller.current_controller.user_manager.class}"; gets; Controller.current_controller.bail }
-
 trap ("INT") {
 	if Controller.current_controller.user_manager
 		Controller.current_controller.bail
@@ -26,10 +24,9 @@ $:.unshift(File.join(APP_ROOT, 'lib'))
 $:.unshift(File.join(APP_ROOT, 'lib', 'core_ext'))
 $:.unshift(File.join(APP_ROOT, 'gappsprovisioning'))
 
-# require 'to_hash'
 require 'titleize'
-require 'rubygems'
-require 'highline/import'
+require 'text_formatting'
+require "io/console"
 require 'provisioningapi'
 require 'net/https'
 require 'login'

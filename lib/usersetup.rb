@@ -8,7 +8,6 @@ class UserSetup
 	def initialize
 
 		@controller = Controller.current_controller
-
 		
 	end
 
@@ -23,7 +22,7 @@ class UserSetup
 
 		@controller.print_header("Complete User Setup")
 		puts "\nEnter any email aliases for this user, separated by commas."		
-		puts "e.g. \"f.last@example.com, first.last@example.com, otherusername@example.com, etc.\"\n"
+		puts "e.g. \"f.last, first.last, otherusername, etc.\"\n"
 		print "> "
         aliases = gets.chomp.strip.downcase
         @alias_list = aliases.gsub(" ","").split(",")
@@ -52,20 +51,23 @@ class UserSetup
 
 		@controller.print_header("Complete User Setup")
 		puts "A new user will be created with the following information:\n"
+		puts
 
-		puts "First and last name: #{@userdata[:fname]} #{@userdata[:lname]}\n\n"
-		print "Email aliases: "
+		puts "First and last name:" 
+		puts "#{@userdata[:fname]} #{@userdata[:lname]}\n\n".bold
+
+		print "Email aliases: \n"
 		
 		@alias_list.each do |e|
-			print "#{e} "
+			puts "#{e} ".bold
 		end
 		puts
 
 		puts
-		print "The new user will be added to the following groups: "
+		print "The new user will be added to the following groups: \n"
 
 		@group_numbers.each do |number|
-			print "#{@all_groups[number.to_i - 1]} "
+			puts "#{@all_groups[number.to_i - 1]} ".bold
 		end
 		puts
 		puts
@@ -97,13 +99,13 @@ class UserSetup
 		        # Create the user account
 		        @controller.session.create_user(@userdata[:uname], @userdata[:fname], @userdata[:lname], default_pass)
 		        @controller.user_manager.created_users << @userdata
-		        puts "User created, setting up email aliases..."
+		        puts "User created, setting up email aliases...".green
 		        sleep 3
 		        # Set up aliases
 		        @alias_list.each do |a|
 		        	@controller.session.create_nickname(@userdata[:uname],a)
 		        end
-		        puts "Done, adding user to groups..."
+		        puts "Done, adding user to groups...".green
 		        sleep 3
 
 		        # Add user to groups
@@ -112,8 +114,10 @@ class UserSetup
 		        end
 
 		    rescue GDataError => e
-		        puts "Uh oh, something went wrong. Check if the user was created, then try again."
-		        puts "errorcode = " +e.code, "input : "+e.input, "reason : "+e.reason
+		        puts "Uh oh, something went wrong.".red + " Check if the user was created, then try again."
+		        puts "errorcode = " + e.code, "input : " + e.input, "reason : " + e.reason
+		        puts "Press enter to continue..."
+		        gets
 		        @controller.prompt
 		    end
 		when "n","no"
@@ -124,7 +128,7 @@ class UserSetup
 		end
 
 		# report successfull creation of user
-		puts "User creation successful!\n\n"	
+		puts "User creation successful!\n\n".green
 		sleep 2
 		@controller.user_manager.get_info(@userdata[:uname])
 		puts "Press enter to continue..."

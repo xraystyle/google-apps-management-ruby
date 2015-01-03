@@ -103,15 +103,17 @@ class UserManagement
          #template: create_user(username, given_name, family_name, password, passwd_hash_function=nil, quota=nil)
          @controller.session.create_user(user_data[:uname], user_data[:fname], user_data[:lname], default_pass)
       rescue GDataError => e
-         puts "User creation failed, retry."
-         puts "errorcode = " +e.code, "input : "+e.input, "reason : "+e.reason
+         puts "User creation failed, retry.".red
+         puts "errorcode = " + e.code, "input : "+ e.input, "reason : "+ e.reason
+         puts "press enter to continue..."
+         gets
          user_prompt
       end
       
 
       
       @created_users << user_data
-      puts "\nUser created successfully:\n"
+      puts "\nUser created successfully:\n".green
       puts "#{user_data[:fname].titleize} #{user_data[:lname].titleize}\nUsername: #{user_data[:uname]}\n"
       puts "Press enter to continue..."
       gets
@@ -127,8 +129,11 @@ class UserManagement
       begin
          @controller.session.create_nickname(user,email_alias)
       rescue GDataError => e
-         puts "Error adding email alias."
+         puts "Error adding email alias.".red
          puts "Reason: #{e.reason}"
+         puts "press enter to continue..."
+         gets
+         user_prompt
       end
 
     
@@ -147,7 +152,7 @@ class UserManagement
       response = gets.chomp.strip.downcase
       # Idiot check.
       puts "\nWARNING: User #{response} will be deleted."
-      puts "YOU CANNOT UNDO THIS. ARE YOU SURE? (yes/no)"
+      puts "YOU CANNOT UNDO THIS. ARE YOU SURE?".red + "(yes/no)"
       print "> "
       y_n = gets.chomp.strip.downcase
       
@@ -159,7 +164,7 @@ class UserManagement
          begin
             @controller.session.delete_user(response)
          rescue GDataError => e
-            puts "User deletion failed for user \"#{response}\"."
+            puts "User deletion failed for user \"#{response}\".".red
             puts "Reason : "+e.reason
             puts "Press enter to continue..."
             gets
@@ -167,7 +172,7 @@ class UserManagement
          end
 
          @deleted_users << response
-         puts "\nUser deleted successfully:\n"
+         puts "\nUser deleted successfully:\n".green
          puts "#{response}"
          puts "Press enter to continue..."
          gets
@@ -211,7 +216,7 @@ class UserManagement
          nicks=@controller.session.retrieve_nicknames(username)
          groups=@controller.session.retrieve_groups(username)
       rescue StandardError => e
-         puts "User retrieval failed for username \"#{username}\"."
+         puts "User retrieval failed for username \"#{username}\".".red
          if e.to_s.include? "undefined"
             puts "Reason : User not found."
          end

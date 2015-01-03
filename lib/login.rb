@@ -15,16 +15,18 @@ class LogIn
          # Set password to nil as soon as we're done with it.
          @password = nil
       rescue 
-         puts "Log-in failed. Likely incorrect username or password.\n Retry? (y/n)"
+         puts
+         print "Log-in failed.".red + " Likely incorrect username or password.\nRetry? (y/n): "
          response = gets.chomp.downcase.strip
+         
          case response
-         when "y" || "yes"
+         when "y", "yes"
             @gapps_session = nil
             @username = nil
             user = nil
             @password = nil
             initialize
-         when "no" || "n"
+         when "no", "n"
             puts "Check your login credentials, then try again."
             exit!
          end
@@ -35,23 +37,19 @@ class LogIn
    
    #### Ask For Credentials ####
    # ask_for_creds requests the user's email address for
-   # their GApps domain and their password. It uses the
-   # 'highline' gem to supress printing of the password
-   # on the screen in plaintext.
+   # their GApps domain and their password. Password input
+   # is supressed via STDIN.noecho.
    
    def ask_for_creds(user=nil)
       if user
          @username = user
       else
-         $stdout.sync = true
          print "Enter your GApps email address: "
          @username = gets.chomp.strip.downcase         
-         # using highline for input on more than one run of a loop causes intermittent errors
-         # in Ruby 1.8.7 on Mac OS X 10.8 for some reason. Changed from the highline 'ask' below
-         # to the 'print/gets' above.
-         #@username = ask("Enter your GApps email address: ").strip.downcase if @username == nil
       end
-      @password = ask("Enter your password:  ") { |q| q.echo = "x" }
+
+      print "Enter your password:  "
+      @password = STDIN.noecho(&:gets)
    end
     
       #### Start Timeout ####

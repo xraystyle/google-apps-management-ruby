@@ -7,12 +7,11 @@ class GroupManagement
 
     attr_accessor :created_groups, :deleted_groups
 
-	def initialize
+    def initialize
 		@controller = Controller.current_controller
         @created_groups = []
         @deleted_groups =[]
         @group_ids =[]
-        # refresh_groups
     end
 
 
@@ -138,7 +137,7 @@ class GroupManagement
 
         # Build the group data.
         puts "Choose an email address for the group. The domain must be managed by this Google Apps account."
-        puts "Example: \"group@my-domain.com\""
+        puts "Example: \"group@my-domain.com\"".bold
         print "Enter the email address of the new group: "
         group_id = gets.chomp.strip.downcase
         print "Enter a name for the group: "
@@ -146,11 +145,11 @@ class GroupManagement
         print "Enter a short description for the group: "
         group_data[:group_desc] = gets.chomp.strip
         puts
-        puts "Who should be able to post to this group?"
+        puts "Who should be able to read and post to this group?"
         puts "A. Owners of the group only."
         puts "B. Members of the group only."
         puts "C. Any user who belongs to the same domain as the group."
-        puts "D. Anyone."
+        puts "D. Anyone." + " (Use with caution!)".red
         print "> "
         response = gets.chomp.strip.downcase
         options = ["a","b","c","d"]
@@ -214,11 +213,13 @@ class GroupManagement
                 @created_groups << group_id
                 refresh_groups
             rescue GDataError => e
-                puts "Group creation failed."
+                puts "Group creation failed.".red
                 puts "Reason: #{e.reason}"
+                puts "press enter to continue..."
+                gets
                 group_prompt
             end
-            puts "Group created successfully."
+            puts "Group created successfully.".green
             puts "Press \"enter\" to continue..."
             group_prompt
         end
@@ -255,7 +256,7 @@ class GroupManagement
             # idiot check the deletion with the user.
             action_header("Delete A Group")
             puts "WARNING: Email group #{response} will be deleted."
-            puts "YOU CANNOT UNDO THIS. ARE YOU SURE? (yes/no)"
+            puts "YOU CANNOT UNDO THIS. ARE YOU SURE?".red "(yes/no)"
             print "> "
 
             confirm_delete = gets.chomp.strip.downcase
@@ -281,8 +282,10 @@ class GroupManagement
                 @deleted_groups << response
                 refresh_groups
             rescue GDataError => e
-                puts "Group deletion failed."
+                puts "Group deletion failed.".red
                 puts "Reason: #{e.reason}"
+                puts "press enter to continue..."
+                gets
             end
         else
             puts "Group \"#{response}\" not found. Try again."
@@ -290,7 +293,7 @@ class GroupManagement
             group_prompt
         end
 
-        puts "Group \"#{response}\" deleted successfully."
+        puts "Group \"#{response}\" deleted successfully.".green
         puts "Press \"enter\" to continue..."
         gets
         group_prompt
@@ -338,9 +341,10 @@ class GroupManagement
                     @controller.session.add_member_to_group(user, the_group)
                 end
             rescue GDataError => e
-                puts "Adding user to group failed."
+                puts "Adding user to group failed.".red
                 puts "Reason: #{e.reason}. Please try again."
-                sleep 3
+                puts "press enter to continue..."
+                gets
                 group_prompt
             end
 
@@ -395,9 +399,10 @@ class GroupManagement
                     @controller.session.remove_member_from_group(user, the_group)
                 end
             rescue GDataError => e
-                puts "Removing user from group failed."
+                puts "Removing user from group failed.".red
                 puts "Reason: #{e.reason}. Please try again."
-                sleep 3
+                puts "press enter to continue..."
+                gets
                 group_prompt
             end
 
@@ -431,7 +436,7 @@ class GroupManagement
             memberlist = @controller.session.retrieve_all_members(the_group)
             ownerlist = @controller.session.retrieve_all_owners(the_group)
         rescue GDataError => e
-            puts "Group info retrieval failed."
+            puts "Group info retrieval failed.".red
             puts "Reason: #{e.reason}"
             puts "Press enter to continue..."
             gets

@@ -41,10 +41,11 @@ class Controller
       prompt      
    end
 
-   def print_header(subsection=nil)
+   # Print the main app header with a subsection header, if applicable.
+   def print_header(subsection=nil) 
       system("clear")
       puts "\n\n"
-      puts "GApps User Provisioning".center(100)
+      puts "GApps User Provisioning".center(100).bold
       if subsection
          puts "\n"
          puts "#{subsection}".center(100)
@@ -60,7 +61,7 @@ class Controller
       $stdout.sync = true
       options = ["a","b","c","quit","exit"]
       print_header
-      puts "Options:\n"
+      puts "Options:\n".bold
       puts "A. User Management"
       puts "B. Group Management"
       puts "C. Complete User Setup"
@@ -97,7 +98,7 @@ class Controller
    def bail
       system("clear")
       puts "\n\n"
-      puts "Thanks for using GApps User Provisioning!".center(100)
+      puts "Thanks for using GApps User Provisioning!".center(100).bold
       puts "\n\n"
       puts "*" * 100
       puts "\n\n"
@@ -105,7 +106,7 @@ class Controller
       # output users and groups created in this session.
 
       if @user_manager.created_users.any?
-         puts "Created Users:\n\n"
+         puts "Created Users:\n\n".bold.green
          @user_manager.created_users.each do |user|
             puts "#{user[:fname].titleize} #{user[:lname].titleize}\nUsername: #{user[:uname]}\n\n"
          end
@@ -113,7 +114,7 @@ class Controller
       end
       
       if @group_manager.created_groups.any?
-         puts "Created Groups:\n\n"
+         puts "Created Groups:\n\n".bold.green
          @group_manager.created_groups.each do |group_id|
             puts "#{group_id}\n\n"
          end
@@ -122,7 +123,7 @@ class Controller
       
       # output users and groups deleted in this session.
       if @user_manager.deleted_users.any?
-         puts "Deleted Users:\n\n"
+         puts "Deleted Users:\n\n".bold.red
          @user_manager.deleted_users.each do |user|
             puts "#{user}\n\n"
          end
@@ -130,7 +131,7 @@ class Controller
       end
 
       if @group_manager.deleted_groups.any?
-         puts "Deleted Groups:\n\n"
+         puts "Deleted Groups:\n\n".bold.red
          @group_manager.deleted_groups.each do |group_id|
             puts "#{group_id}\n\n"
          end
