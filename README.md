@@ -5,9 +5,6 @@ This is a ruby app that acts as a CLI for your Google Apps domain.
 
 The app uses the Google Apps provisioning API Ruby client found here: http://code.google.com/p/gdatav2rubyclientlib/
 
-This app also makes use of the Highline gem for more advanced control over user input. 
-More info on that here: http://highline.rubyforge.org/
-
 Currently the app can manage user accounts and groups within the domains in your Google Apps account. The app can also
 create a user, set up aliases and add the new user to groups in one workflow.
 
