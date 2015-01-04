@@ -3,6 +3,8 @@ Google Apps User Provisioning Tool
 
 This is a ruby app that acts as a CLI for your Google Apps domain.
 
+![screenshot.gif](http://xraystyle.com/images/gapps.gif)
+
 The app uses the Google Apps provisioning API Ruby client found here: http://code.google.com/p/gdatav2rubyclientlib/
 
 Currently the app can manage user accounts and groups within the domains in your Google Apps account. The app can also
