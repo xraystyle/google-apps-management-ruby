@@ -28,6 +28,7 @@ CHANGELOG
 ------------
 
 01/03/15: Refactoring, Bugfixes, Output Formatting
+
 Refactored the app to get rid of dependencies on Rubygems and the 'Highline' gem. App will now run on a system without Rubygems or the highline gem installed!
 
 Text output is now better formatted and colorized! Success messages are green, errors are red, etc.
@@ -37,13 +38,17 @@ Fixed several bugs where the user would receive no feedback when errors were enc
 Removed/refactored some redundant code, added comments and removed a lot of old, commented-out debugging code.
 
 09/19/14: Bugfixes
+
 The full list of groups wasn't reflecting changes made if groups were added or deleted during the session. Changed text output on user and group deletion methods so that they're consistent in both places.
 
-04/10/13: Complete User Setup has been implemented!  
+04/10/13: Complete User Setup has been implemented!
+
 The main menu now has an option for Complete User Setup. This option allows you to create a new user account, add email aliases to it and add the user to any groups in the domain in a single workflow. Last to do is set up sending of welcome
 emails to the new user. Maybe later in the week.
 
-04/08/13: I CAN HAS COMMITS! Group management is up and working. App has the ability to list groups, get group info, create and delete groups as well as add and remove users. All functionality is 
+04/08/13: I CAN HAS COMMITS! 
+
+Group management is up and working. App has the ability to list groups, get group info, create and delete groups as well as add and remove users. All functionality is 
 tested working but could probably use some more cleanup/error-checking here and there.
 
 
