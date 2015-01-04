@@ -65,7 +65,7 @@ class UserManagement
    def create_user(usersetup=false)
    
       user_data = {}
-      default_pass = "changeme456"
+      user_data[:default_pass] = "changeme456"
       unless usersetup
          system("clear")
          puts "\n\nCreate A User\n\n"
@@ -83,7 +83,7 @@ class UserManagement
       print "Enter the new user's username: "
       user_data[:uname] = gets.chomp.strip.downcase
       
-      puts "\nThe user will be assigned the default password of #{default_pass}"
+      puts "\nThe user will be assigned the default password of #{user_data[:default_pass]}"
       puts "and it must be changed on their first login.\n"
 
       # just return the userdata and break if called from usersetup class.
@@ -92,7 +92,7 @@ class UserManagement
          return user_data
       end
 
-      # You can specify your preferred default password using the 'default_pass' 
+      # You can specify your preferred default password using the 'user_data[:default_pass]' 
       # variable assignment at the beginning of this method definition. It's currently
       # set to 'changeme456'. The ability to specify a password was not implemented due
       # to the need for a user to change their password on first login by default, which
@@ -101,7 +101,7 @@ class UserManagement
       @controller.check_timeout
       begin
          #template: create_user(username, given_name, family_name, password, passwd_hash_function=nil, quota=nil)
-         @controller.session.create_user(user_data[:uname], user_data[:fname], user_data[:lname], default_pass)
+         @controller.session.create_user(user_data[:uname], user_data[:fname], user_data[:lname], user_data[:default_pass])
       rescue GDataError => e
          puts "User creation failed, retry.".red
          puts "errorcode = " + e.code, "input : "+ e.input, "reason : "+ e.reason

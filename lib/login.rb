@@ -50,6 +50,7 @@ class LogIn
 
       print "Enter your password:  "
       @password = STDIN.noecho(&:gets)
+      puts
    end
     
       #### Start Timeout ####

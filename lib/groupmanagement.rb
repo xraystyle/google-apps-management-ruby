@@ -175,20 +175,20 @@ class GroupManagement
         action_header("Create A Group")
 
         puts "A new group will be created with the information below:\n\n"
-        puts "Group ID: #{group_id}\n"
-        puts "Group Name: #{group_data[:group_name]}\n"
-        puts "Group Description: #{group_data[:group_desc]}\n"
+        puts "Group ID:" + " #{group_id}\n".bold
+        puts "Group Name:" + " #{group_data[:group_name]}\n".bold
+        puts "Group Description:" + " #{group_data[:group_desc]}\n".bold
         print "Who can post to this group: "
         
         case group_data[:email_priv]
         when "Owner"
-            puts "Group Owners Only"
+            puts "Group Owners Only".bold
         when "Member"
-            puts "Group Members Only"
+            puts "Group Members Only".bold
         when "Domain"
-            puts "All Members Of This Domain"
+            puts "All Members Of This Domain".bold
         when "Anyone"
-            puts "Anyone"
+            puts "Anyone" + " (Make sure you want to do this.)".red
         end
 
         puts "\nIs this information correct? Enter \"yes\" to create the group, or \"no\" to cancel."
@@ -208,6 +208,7 @@ class GroupManagement
             group_prompt            
         when "y", "yes"
             begin
+                system "clear"
                 @controller.check_timeout
                 @controller.session.create_group(group_id, group_data.values)
                 @created_groups << group_id
@@ -221,6 +222,7 @@ class GroupManagement
             end
             puts "Group created successfully.".green
             puts "Press \"enter\" to continue..."
+            gets
             group_prompt
         end
         
@@ -256,7 +258,7 @@ class GroupManagement
             # idiot check the deletion with the user.
             action_header("Delete A Group")
             puts "WARNING: Email group #{response} will be deleted."
-            puts "YOU CANNOT UNDO THIS. ARE YOU SURE?".red "(yes/no)"
+            puts "YOU CANNOT UNDO THIS. ARE YOU SURE?".red + "(yes/no)"
             print "> "
 
             confirm_delete = gets.chomp.strip.downcase

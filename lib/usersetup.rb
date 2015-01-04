@@ -56,6 +56,10 @@ class UserSetup
 		puts "First and last name:" 
 		puts "#{@userdata[:fname]} #{@userdata[:lname]}\n\n".bold
 
+		puts "Username:"
+		puts "#{@userdata[:uname]}".bold
+		puts
+
 		print "Email aliases: \n"
 		
 		@alias_list.each do |e|
@@ -76,7 +80,6 @@ class UserSetup
 	end
 
 	def rockandroll!
-		default_pass = 'changeme456'
 		@all_groups = @controller.group_manager.refresh_groups
 		basic_user_data
 		get_aliases
@@ -97,7 +100,7 @@ class UserSetup
 			@controller.check_timeout
 		    begin
 		        # Create the user account
-		        @controller.session.create_user(@userdata[:uname], @userdata[:fname], @userdata[:lname], default_pass)
+		        @controller.session.create_user(@userdata[:uname], @userdata[:fname], @userdata[:lname], @userdata[:default_pass])
 		        @controller.user_manager.created_users << @userdata
 		        puts "User created, setting up email aliases...".green
 		        sleep 3

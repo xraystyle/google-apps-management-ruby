@@ -31,7 +31,7 @@ class Controller
    
    def re_auth(username)
       puts
-      puts "Session timed out, please re-authenticate."
+      puts "Session timed out, please re-authenticate.".light_yellow
       @auth = LogIn.new(@@current_controller.username)
       @session = @auth.gapps_session
    end
