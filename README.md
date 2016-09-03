@@ -1,3 +1,8 @@
+This app is no longer functional.
+---------------------------------------
+
+Sadly, the Google Apps API this tool depended on has been deprecated. I have no current plans to rewrite this for the new Google Apps API, as at the moment I don't have the time to do so. It was fun while it lasted. 
+
 Google Apps User Provisioning Tool
 ---------------------------------------
 

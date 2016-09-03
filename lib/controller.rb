@@ -71,7 +71,7 @@ class Controller
       response = gets.chomp.downcase.strip
       
       while !options.include?(response)
-         puts 'Try again. ("A"", "B", "C" or "quit")'
+         puts 'Try again. ("A", "B", "C" or "quit")'
          print "> "
          response = gets.chomp.downcase.strip
       end

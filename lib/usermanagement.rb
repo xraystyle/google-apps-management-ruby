@@ -165,7 +165,7 @@ class UserManagement
             @controller.session.delete_user(response)
          rescue GDataError => e
             puts "User deletion failed for user \"#{response}\".".red
-            puts "Reason : "+e.reason
+            puts "Reason : " + e.reason
             puts "Press enter to continue..."
             gets
             user_prompt
